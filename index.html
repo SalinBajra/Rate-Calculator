@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Calculator - Hosting Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .vat-notice {
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .services-card {
+            grid-column: 1;
+        }
+
+        .summary-card {
+            grid-column: 2;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .service-group {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .service-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .service-title {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .billing-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .billing-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .billing-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .billing-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            gap: 15px;
+        }
+
+        .service-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .service-label input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .service-label label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .service-price {
+            color: #667eea;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .quantity-input {
+            width: 70px;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #666;
+        }
+
+        .summary-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .subtotal {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #667eea;
+            font-size: 1.1em;
+        }
+
+        .subtotal .summary-label {
+            color: #333;
+        }
+
+        .vat-section {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .vat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            color: #666;
+        }
+
+        .vat-badge {
+            display: inline-block;
+            background: #ffc107;
+            color: #333;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.3em;
+        }
+
+        .total-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .total-amount {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .currency {
+            font-size: 0.6em;
+            margin-right: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .services-card {
+                grid-column: 1;
+            }
+
+            .summary-card {
+                grid-column: 1;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preset-rates {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💻 Rate Calculator</h1>
+            <p>Hosting Services Pricing Calculator</p>
+        </header>
+
+        <div class="vat-notice">
+            <strong>⚠️ Nepal VAT (13%) Applied Automatically</strong> - All prices below are base rates. Final amount includes 13% VAT as per Nepal regulations.
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✓ Calculation copied to clipboard!
+        </div>
+
+        <div class="main-content">
+            <!-- Services Selection -->
+            <div class="card services-card">
+                <h2>Services</h2>
+
+                <!-- Web Hosting Plans -->
+                <div class="service-group">
+                    <div class="service-title">🌐 Web Hosting Plans</div>
+                    <div class="billing-toggle">
+                        <button class="billing-btn active" onclick="setBillingPeriod('monthly')">Monthly</button>
+                        <button class="billing-btn" onclick="setBillingPeriod('yearly')">Yearly</button>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="web_essential" onchange="updateCalculation()">
+                            <label for="web_essential">Web Essential (1 Website)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="web_essential_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" style="display:none;">
+                        </div>
+                        <div class="service-price" id="web_essential_price">NPR 90</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="web_plus" onchange="updateCalculation()">
+                            <label for="web_plus">Web Plus (5 Websites)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="web_plus_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" style="display:none;">
+                        </div>
+                        <div class="service-price" id="web_plus_price">NPR 150</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="web_pro" onchange="updateCalculation()">
+                            <label for="web_pro">Web Pro (Unlimited Websites) ⭐</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="web_pro_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" style="display:none;">
+                        </div>
+                        <div class="service-price" id="web_pro_price">NPR 270</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="web_ultimate" onchange="updateCalculation()">
+                            <label for="web_ultimate">Web Ultimate (Unlimited + Free Domain)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="web_ultimate_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" style="display:none;">
+                        </div>
+                        <div class="service-price" id="web_ultimate_price">NPR 360</div>
+                    </div>
+                </div>
+
+                <!-- Domain Registration -->
+                <div class="service-group">
+                    <div class="service-title">🔗 Domain Registration (Annual)</div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="domain_com" onchange="updateCalculation()">
+                            <label for="domain_com">Domain .COM</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="domain_com_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="domain_com_price">NPR 2,500</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="domain_net" onchange="updateCalculation()">
+                            <label for="domain_net">Domain .NET</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="domain_net_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="domain_net_price">NPR 3,000</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="domain_org" onchange="updateCalculation()">
+                            <label for="domain_org">Domain .ORG</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="domain_org_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="domain_org_price">NPR 3,000</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="domain_in" onchange="updateCalculation()">
+                            <label for="domain_in">Domain .IN</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="domain_in_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="domain_in_price">NPR 1,500</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="domain_info" onchange="updateCalculation()">
+                            <label for="domain_info">Domain .INFO</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="domain_info_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="domain_info_price">NPR 800</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="domain_xyz" onchange="updateCalculation()">
+                            <label for="domain_xyz">Domain .XYZ</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="domain_xyz_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="domain_xyz_price">NPR 500</div>
+                    </div>
+                </div>
+
+                <!-- Email & Cloud Services -->
+                <div class="service-group">
+                    <div class="service-title">📧 Email Services</div>
+                    
+                    <div style="font-size: 0.9em; color: #667eea; font-weight: 600; margin-bottom: 12px; padding: 10px; background: #f0f4ff; border-radius: 5px;">
+                        Google Workspace
+                    </div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="google_workspace_starter" onchange="updateCalculation()">
+                            <label for="google_workspace_starter">Google Workspace Starter (30GB)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="google_workspace_starter_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="google_workspace_starter_price">NPR 599</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="google_workspace_standard" onchange="updateCalculation()">
+                            <label for="google_workspace_standard">Google Workspace Standard (2TB)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="google_workspace_standard_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="google_workspace_standard_price">NPR 2,170</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="google_workspace_plus" onchange="updateCalculation()">
+                            <label for="google_workspace_plus">Google Workspace Plus (5TB) ⭐</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="google_workspace_plus_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="google_workspace_plus_price">NPR 3,410</div>
+                    </div>
+
+                    <div style="font-size: 0.9em; color: #667eea; font-weight: 600; margin: 15px 0 12px 0; padding: 10px; background: #f0f4ff; border-radius: 5px;">
+                        Microsoft 365
+                    </div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="microsoft_365_basic" onchange="updateCalculation()">
+                            <label for="microsoft_365_basic">Microsoft 365 Business Basic</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="microsoft_365_basic_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="microsoft_365_basic_price">NPR 549</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="microsoft_365_standard" onchange="updateCalculation()">
+                            <label for="microsoft_365_standard">Microsoft 365 Business Standard</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="microsoft_365_standard_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="microsoft_365_standard_price">NPR 1,649</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="microsoft_365_premium" onchange="updateCalculation()">
+                            <label for="microsoft_365_premium">Microsoft 365 Business Premium</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="microsoft_365_premium_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="microsoft_365_premium_price">NPR 3,599</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="microsoft_365_apps" onchange="updateCalculation()">
+                            <label for="microsoft_365_apps">Microsoft 365 Apps for Business</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="microsoft_365_apps_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="microsoft_365_apps_price">NPR 1,349</div>
+                    </div>
+
+                    <div style="font-size: 0.9em; color: #667eea; font-weight: 600; margin: 15px 0 12px 0; padding: 10px; background: #f0f4ff; border-radius: 5px;">
+                        Zoho Mail
+                    </div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="zoho_mail_lite_5gb" onchange="updateCalculation()">
+                            <label for="zoho_mail_lite_5gb">Zoho Mail Lite (5GB)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="zoho_mail_lite_5gb_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="zoho_mail_lite_5gb_price">NPR 160</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="zoho_mail_lite_10gb" onchange="updateCalculation()">
+                            <label for="zoho_mail_lite_10gb">Zoho Mail Lite (10GB)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="zoho_mail_lite_10gb_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="zoho_mail_lite_10gb_price">NPR 200</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="zoho_mail_premium_50gb" onchange="updateCalculation()">
+                            <label for="zoho_mail_premium_50gb">Zoho Mail Premium (50GB)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="zoho_mail_premium_50gb_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Users">
+                        </div>
+                        <div class="service-price" id="zoho_mail_premium_50gb_price">NPR 620</div>
+                    </div>
+                </div>
+
+                <!-- Cloud Services -->
+                <div class="service-group">
+                    <div class="service-title">☁️ Cloud Services</div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="cloud_storage" onchange="updateCalculation()">
+                            <label for="cloud_storage">Cloud Storage</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="cloud_storage_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="cloud_storage_price">NPR 300</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="cloud_hosting" onchange="updateCalculation()">
+                            <label for="cloud_hosting">Cloud Hosting (Scalable)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="cloud_hosting_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="cloud_hosting_price">NPR 600</div>
+                    </div>
+                </div>
+
+                <!-- Server Hosting -->
+                <div class="service-group">
+                    <div class="service-title">🖥️ Server Hosting</div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="wordpress_hosting" onchange="updateCalculation()">
+                            <label for="wordpress_hosting">WordPress Hosting (Optimized)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="wordpress_hosting_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="wordpress_hosting_price">NPR 250</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="cloud_hosting" onchange="updateCalculation()">
+                            <label for="cloud_hosting">Cloud Hosting (Scalable)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="cloud_hosting_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="cloud_hosting_price">NPR 600</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="reseller_hosting" onchange="updateCalculation()">
+                            <label for="reseller_hosting">Reseller Hosting</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="reseller_hosting_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="reseller_hosting_price">NPR 500</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="cloud_storage" onchange="updateCalculation()">
+                            <label for="cloud_storage">Cloud Storage</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="cloud_storage_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="cloud_storage_price">NPR 300</div>
+                    </div>
+                </div>
+
+                <!-- Nepal-Based VPS -->
+                <div class="service-group">
+                    <div class="service-title">⚙️ Nepal-Based VPS (Local Servers)</div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="nepal_vps_1c_2g" onchange="updateCalculation()">
+                            <label for="nepal_vps_1c_2g">Nepal VPS 1C / 2GB RAM</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="nepal_vps_1c_2g_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="nepal_vps_1c_2g_price">NPR 1,260</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="nepal_vps_2c_4g" onchange="updateCalculation()">
+                            <label for="nepal_vps_2c_4g">Nepal VPS 2C / 4GB RAM</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="nepal_vps_2c_4g_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="nepal_vps_2c_4g_price">NPR 2,520</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="nepal_vps_3c_6g" onchange="updateCalculation()">
+                            <label for="nepal_vps_3c_6g">Nepal VPS 3C / 6GB RAM ⭐</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="nepal_vps_3c_6g_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="nepal_vps_3c_6g_price">NPR 3,780</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="nepal_vps_4c_8g" onchange="updateCalculation()">
+                            <label for="nepal_vps_4c_8g">Nepal VPS 4C / 8GB RAM</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="nepal_vps_4c_8g_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="nepal_vps_4c_8g_price">NPR 5,050</div>
+                    </div>
+                </div>
+
+                <!-- International VPS -->
+                <div class="service-group">
+                    <div class="service-title">🌍 International VPS (Global Servers)</div>
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="international_vps_4c_8g" onchange="updateCalculation()">
+                            <label for="international_vps_4c_8g">Intl VPS 4C / 8GB (US/EU/Asia)</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="international_vps_4c_8g_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="international_vps_4c_8g_price">NPR 4,000</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="international_vps_8c_16g" onchange="updateCalculation()">
+                            <label for="international_vps_8c_16g">Intl VPS 8C / 16GB ⭐</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="international_vps_8c_16g_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="international_vps_8c_16g_price">NPR 8,000</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-label">
+                            <input type="checkbox" id="international_vps_16c_32g" onchange="updateCalculation()">
+                            <label for="international_vps_16c_32g">Intl VPS 16C / 32GB</label>
+                        </div>
+                        <div>
+                            <input type="number" class="quantity-input" id="international_vps_16c_32g_qty" value="1" min="1" onchange="updateCalculation()" onkeyup="updateCalculation()" placeholder="Qty">
+                        </div>
+                        <div class="service-price" id="international_vps_16c_32g_price">NPR 16,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="card summary-card">
+                <h2>💰 Price Summary</h2>
+
+                <div id="selectedItems">
+                    <div style="text-align: center; color: #999; padding: 40px 0;">
+                        Select services to see pricing
+                    </div>
+                </div>
+
+                <div id="summaryContent" style="display: none;">
+                    <div class="subtotal">
+                        <div class="summary-item">
+                            <span class="summary-label">Subtotal</span>
+                            <span class="summary-value"><span class="currency">NPR</span><span id="subtotal">0</span></span>
+                        </div>
+                    </div>
+
+                    <div class="vat-section">
+                        <div class="vat-row">
+                            <span>VAT (13%)<span class="vat-badge">Nepal</span></span>
+                            <span style="font-weight: 600; color: #ffc107;" id="vat">NPR 0</span>
+                        </div>
+                    </div>
+
+                    <div class="total">
+                        <div class="total-label">TOTAL PAYABLE</div>
+                        <div class="total-amount">
+                            <span class="currency">NPR</span><span id="total">0</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="copyToClipboard()">📋 Copy Calculation</button>
+                        <button class="btn btn-secondary" onclick="clearCalculation()">🔄 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Rate Calculator for Hosting Services | Nepal VAT Compliant</p>
+        </div>
+    </div>
+
+    <script>
+        const VAT_RATE = 0.13; // 13% VAT for Nepal
+        let currentBillingPeriod = 'monthly';
+
+        const services = {
+            web_essential: { monthly: 90, yearly: 1080 },
+            web_plus: { monthly: 150, yearly: 1800 },
+            web_pro: { monthly: 270, yearly: 3240 },
+            web_ultimate: { monthly: 360, yearly: 4320 },
+            domain_com: { monthly: 208, yearly: 2500 },
+            domain_net: { monthly: 250, yearly: 3000 },
+            domain_org: { monthly: 250, yearly: 3000 },
+            domain_in: { monthly: 125, yearly: 1500 },
+            domain_info: { monthly: 67, yearly: 800 },
+            domain_xyz: { monthly: 42, yearly: 500 },
+            google_workspace_starter: { monthly: 599, yearly: 7188 },
+            google_workspace_standard: { monthly: 2170, yearly: 26040 },
+            google_workspace_plus: { monthly: 3410, yearly: 40920 },
+            microsoft_365_basic: { monthly: 549, yearly: 6588 },
+            microsoft_365_standard: { monthly: 1649, yearly: 19788 },
+            microsoft_365_premium: { monthly: 3599, yearly: 43188 },
+            microsoft_365_apps: { monthly: 1349, yearly: 16188 },
+            zoho_mail_lite_5gb: { monthly: 160, yearly: 1920 },
+            zoho_mail_lite_10gb: { monthly: 200, yearly: 2400 },
+            zoho_mail_premium_50gb: { monthly: 620, yearly: 7440 },
+            nepal_vps_1c_2g: { monthly: 1260, yearly: 15120 },
+            nepal_vps_2c_4g: { monthly: 2520, yearly: 30240 },
+            nepal_vps_3c_6g: { monthly: 3780, yearly: 45360 },
+            nepal_vps_4c_8g: { monthly: 5050, yearly: 60600 },
+            international_vps_4c_8g: { monthly: 4000, yearly: 48000 },
+            international_vps_8c_16g: { monthly: 8000, yearly: 96000 },
+            international_vps_16c_32g: { monthly: 16000, yearly: 192000 },
+            cloud_storage: { monthly: 300, yearly: 3600 },
+            cloud_hosting: { monthly: 600, yearly: 7200 },
+            wordpress_hosting: { monthly: 250, yearly: 3000 },
+            reseller_hosting: { monthly: 500, yearly: 6000 }
+        };
+
+        function setBillingPeriod(period) {
+            currentBillingPeriod = period;
+            
+            // Update button states
+            document.querySelectorAll('.billing-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show/hide quantity inputs based on selection
+            document.querySelectorAll('[id$="_qty"]').forEach(input => {
+                const serviceId = input.id.replace('_qty', '');
+                const checkbox = document.getElementById(serviceId);
+                if (checkbox && checkbox.checked) {
+                    input.style.display = checkbox && checkbox.checked ? 'block' : 'none';
+                }
+            });
+
+            updateCalculation();
+        }
+
+        function updateCalculation() {
+            let subtotal = 0;
+            let hasSelection = false;
+            const selectedItems = [];
+
+            // Update price displays and calculate
+            for (const [serviceId, prices] of Object.entries(services)) {
+                const checkbox = document.getElementById(serviceId);
+                const qtyInput = document.getElementById(serviceId + '_qty');
+                const priceDisplay = document.getElementById(serviceId + '_price');
+                
+                const price = prices[currentBillingPeriod];
+                priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
+
+                if (checkbox && checkbox.checked) {
+                    hasSelection = true;
+                    const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+                    const itemTotal = price * qty;
+                    subtotal += itemTotal;
+
+                    const label = checkbox.nextElementSibling.textContent;
+                    selectedItems.push({
+                        label: label,
+                        qty: qty > 1 ? ` x${qty}` : '',
+                        price: price,
+                        total: itemTotal
+                    });
+
+                    // Show quantity input if checked
+                    if (qtyInput) {
+                        qtyInput.style.display = 'block';
+                    }
+                } else {
+                    // Hide quantity input if unchecked
+                    if (qtyInput) {
+                        qtyInput.style.display = 'none';
+                    }
+                }
+            }
+
+            // Update display
+            const selectedItemsDiv = document.getElementById('selectedItems');
+            const summaryContent = document.getElementById('summaryContent');
+
+            if (hasSelection) {
+                let html = '<div style="margin-bottom: 20px;">';
+                selectedItems.forEach(item => {
+                    html += `<div class="summary-item">
+                        <span class="summary-label">${item.label}${item.qty}</span>
+                        <span class="summary-value">NPR ${item.total.toLocaleString()}</span>
+                    </div>`;
+                });
+                html += '</div>';
+                selectedItemsDiv.innerHTML = html;
+                summaryContent.style.display = 'block';
+
+                // Calculate VAT and Total
+                const vat = Math.round(subtotal * VAT_RATE * 100) / 100;
+                const total = Math.round((subtotal + vat) * 100) / 100;
+
+                document.getElementById('subtotal').textContent = subtotal.toLocaleString();
+                document.getElementById('vat').textContent = `NPR ${vat.toLocaleString()}`;
+                document.getElementById('total').textContent = total.toLocaleString();
+            } else {
+                selectedItemsDiv.innerHTML = '<div style="text-align: center; color: #999; padding: 40px 0;">Select services to see pricing</div>';
+                summaryContent.style.display = 'none';
+            }
+        }
+
+        function copyToClipboard() {
+            const subtotal = document.getElementById('subtotal').textContent;
+            const vat = document.getElementById('vat').textContent.replace('NPR ', '');
+            const total = document.getElementById('total').textContent;
+            const period = currentBillingPeriod === 'monthly' ? 'Monthly' : 'Yearly';
+
+            const text = `
+RATE CALCULATION (${period})
+═══════════════════════════════════
+Subtotal: NPR ${subtotal}
+VAT (13%): NPR ${vat}
+───────────────────────────────────
+TOTAL PAYABLE: NPR ${total}
+═══════════════════════════════════
+
+Calculated on: ${new Date().toLocaleString('en-NP')}
+            `.trim();
+
+            navigator.clipboard.writeText(text).then(() => {
+                const msg = document.getElementById('successMessage');
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 3000);
+            });
+        }
+
+        function clearCalculation() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.querySelectorAll('[id$="_qty"]').forEach(input => {
+                input.value = 1;
+                input.style.display = 'none';
+            });
+            document.getElementById('selectedItems').innerHTML = '<div style="text-align: center; color: #999; padding: 40px 0;">Select services to see pricing</div>';
+            document.getElementById('summaryContent').style.display = 'none';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCalculation();
+        });
+    </script>
+</body>
+</html>
