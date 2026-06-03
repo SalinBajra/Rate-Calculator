@@ -172,6 +172,12 @@
             transition: background 0.2s ease;
         }
 
+        .service-row.selected {
+            background: linear-gradient(90deg, rgba(37,99,235,0.06), rgba(124,58,237,0.04));
+            box-shadow: 0 6px 18px rgba(37,99,235,0.06);
+            border: 1px solid rgba(37,99,235,0.12);
+        }
+
         .service-row:hover {
             background: #f1f5f9;
         }
@@ -420,10 +426,19 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">NEST NEPAL</div>
-            <h1>Rate Calculator</h1>
-            <p>Professional Pricing Calculator with 13% VAT</p>
-            <div class="vat-banner">⚠️ All prices include 13% VAT as per Nepal regulations</div>
+            <div style="display:flex; gap:12px; align-items:center; justify-content:center; flex-direction:column;">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <img id="brandLogo" src="" alt="Nest Nepal" style="height:56px; width:auto; border-radius:8px; display:none; object-fit:contain; box-shadow:0 6px 18px rgba(15,23,42,0.06);">
+                    <div class="logo" id="logoText">NEST NEPAL</div>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <h1 style="margin-bottom:0;">Rate Calculator</h1>
+                    <input id="logoUpload" type="file" accept="image/*" style="display:none;" onchange="handleLogoUpload(event)">
+                    <button class="btn btn-secondary" style="padding:8px 10px; font-size:0.9em;" onclick="document.getElementById('logoUpload').click()">Update Logo</button>
+                </div>
+                <p>Professional Pricing Calculator with 13% VAT</p>
+                <div class="vat-banner">⚠️ All prices include 13% VAT as per Nepal regulations</div>
+            </div>
         </header>
 
         <div class="main-content">
@@ -529,27 +544,24 @@
                 <!-- Email Services -->
                 <div class="service-section">
                     <span class="section-label">📧 Email Services (Per User/Month)</span>
-                    <div class="service-row">
-                        <div class="service-label">Google Workspace Starter</div>
-                        <select class="service-select" id="google_workspace_starter" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 User</option>
-                            <option value="5">5 Users</option>
-                            <option value="10">10 Users</option>
-                            <option value="25">25 Users</option>
-                        </select>
-                        <div class="service-price" id="google_workspace_starter_price">NPR 0</div>
-                    </div>
-                    <div class="service-row">
-                        <div class="service-label">Google Workspace Plus</div>
-                        <select class="service-select" id="google_workspace_plus" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 User</option>
-                            <option value="5">5 Users</option>
-                            <option value="10">10 Users</option>
-                            <option value="25">25 Users</option>
-                        </select>
-                        <div class="service-price" id="google_workspace_plus_price">NPR 0</div>
+                    <div class="service-row" id="google_workspace_row" onclick="selectRow(this)">
+                        <div class="service-label">Google Workspace (choose package)</div>
+                        <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
+                            <select class="service-select" id="google_workspace_package" onchange="updateCalculationFromGroup('google_workspace')">
+                                <option value="0">No Package</option>
+                                <option value="google_workspace_starter">Starter (30GB)</option>
+                                <option value="google_workspace_standard">Standard (2TB)</option>
+                                <option value="google_workspace_plus">Plus (5TB)</option>
+                            </select>
+                            <select class="service-select" id="google_workspace_users" onchange="updateCalculationFromGroup('google_workspace')">
+                                <option value="0">0 Users</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                        </div>
+                        <div class="service-price" id="google_workspace_price">NPR 0</div>
                     </div>
                     <div class="service-row">
                         <div class="service-label">Microsoft 365 Premium</div>
@@ -668,6 +680,7 @@
             domain_net: { monthly: 250, yearly: 3000, unit: '/domain' },
             domain_org: { monthly: 250, yearly: 3000, unit: '/domain' },
             google_workspace_starter: { monthly: 599, yearly: 7188, unit: '/user' },
+            google_workspace_standard: { monthly: 2170, yearly: 26040, unit: '/user' },
             google_workspace_plus: { monthly: 3410, yearly: 40920, unit: '/user' },
             microsoft_365_premium: { monthly: 3599, yearly: 43188, unit: '/user' },
             zoho_mail_premium_50gb: { monthly: 620, yearly: 7440, unit: '/user' },
@@ -696,11 +709,20 @@
             for (const [serviceId, serviceData] of Object.entries(services)) {
                 const select = document.getElementById(serviceId);
                 const priceDisplay = document.getElementById(serviceId + '_price');
-                
+
+                // If there's no direct select element for this service (grouped packages), skip here
+                if (!select) {
+                    if (priceDisplay) {
+                        const price = serviceData[currentBillingPeriod];
+                        priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
+                    }
+                    continue;
+                }
+
                 const qty = parseInt(select.value) || 0;
                 const price = serviceData[currentBillingPeriod];
                 const unit = serviceData.unit;
-                
+
                 if (qty > 0) {
                     hasSelection = true;
                     const itemTotal = price * qty;
@@ -708,7 +730,7 @@
 
                     const label = select.parentElement.querySelector('.service-label').textContent;
                     const qtyLabel = select.options[select.selectedIndex].text;
-                    
+
                     selectedItems.push({
                         label: label,
                         qty: qty,
@@ -719,7 +741,7 @@
                     });
                 }
 
-                priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
+                if (priceDisplay) priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
             }
 
             // Update display
@@ -753,6 +775,100 @@
                 summaryContent.style.display = 'none';
                 emptyState.style.display = 'block';
             }
+        }
+
+        // Handle grouped product (Google Workspace): package + users
+        function updateCalculationFromGroup(groupId) {
+            if (groupId === 'google_workspace') {
+                const packageSelect = document.getElementById('google_workspace_package');
+                const usersSelect = document.getElementById('google_workspace_users');
+                const priceDisplay = document.getElementById('google_workspace_price');
+
+                const pkgKey = packageSelect.value; // e.g., google_workspace_starter
+                const users = parseInt(usersSelect.value) || 0;
+
+                if (pkgKey && pkgKey !== '0' && services[pkgKey]) {
+                    const pricePerUser = services[pkgKey][currentBillingPeriod];
+                    priceDisplay.textContent = `NPR ${pricePerUser.toLocaleString()}`;
+                } else {
+                    priceDisplay.textContent = 'NPR 0';
+                }
+
+                // synchronize with main update loop by temporarily setting a hidden select for the package key
+                // We'll compute the group contribution and inject into the displayed summary manually
+                // Re-run full calculation to include other services
+                updateCalculation();
+
+                // Now, if package selected and users > 0, insert/replace group item in selectedItems display
+                const selectedItemsDiv = document.getElementById('selectedItems');
+                const summaryContent = document.getElementById('summaryContent');
+                const emptyState = document.getElementById('emptyState');
+
+                if (pkgKey && pkgKey !== '0' && users > 0 && services[pkgKey]) {
+                    const pricePerUser = services[pkgKey][currentBillingPeriod];
+                    const itemTotal = pricePerUser * users;
+
+                    // Build group item HTML
+                    const groupHtml = `<div class="summary-item">
+                        <div style="flex: 1;">
+                            <div class="summary-label">Google Workspace - ${packageSelect.options[packageSelect.selectedIndex].text}</div>
+                            <div style="font-size: 0.85em; color: #94a3b8; margin-top: 3px;">${users}× NPR ${pricePerUser.toLocaleString()}/user</div>
+                        </div>
+                        <span class="summary-value">NPR ${itemTotal.toLocaleString()}</span>
+                    </div>`;
+
+                    // Remove any existing Google Workspace grouped item
+                    document.querySelectorAll('#selectedItems .summary-item').forEach(node => {
+                        const lbl = node.querySelector('.summary-label');
+                        if (lbl && lbl.textContent && lbl.textContent.startsWith('Google Workspace -')) {
+                            node.remove();
+                        }
+                    });
+
+                    // Insert at top of selected items
+                    selectedItemsDiv.insertAdjacentHTML('afterbegin', groupHtml);
+                    summaryContent.style.display = 'block';
+                    emptyState.style.display = 'none';
+
+                    // Recompute totals including group
+                    // compute subtotal from other selections first
+                    let subtotal = 0;
+                    // sum existing summary values (excluding currency)
+                    document.querySelectorAll('#selectedItems .summary-item .summary-value').forEach(el => {
+                        const valText = el.textContent.replace(/[^0-9]/g, '');
+                        if (valText) subtotal += parseInt(valText);
+                    });
+
+                    const vat = Math.round(subtotal * VAT_RATE * 100) / 100;
+                    const total = Math.round((subtotal + vat) * 100) / 100;
+                    document.getElementById('subtotal').textContent = subtotal.toLocaleString();
+                    document.getElementById('vat').textContent = vat.toLocaleString();
+                    document.getElementById('total').textContent = total.toLocaleString();
+                } else {
+                    // No package selected or zero users — re-run main calculation to restore state
+                    updateCalculation();
+                }
+            }
+        }
+
+        function selectRow(el) {
+            // toggle selection class — clear others
+            document.querySelectorAll('.service-row').forEach(r => r.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function handleLogoUpload(evt) {
+            const file = evt.target.files && evt.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('brandLogo');
+                const text = document.getElementById('logoText');
+                img.src = e.target.result;
+                img.style.display = 'inline-block';
+                text.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
         }
 
         function copyToClipboard() {
