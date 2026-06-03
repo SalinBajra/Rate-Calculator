@@ -454,43 +454,42 @@
                     <button class="billing-btn" onclick="setBillingPeriod('yearly')">Yearly</button>
                 </div>
 
-                <!-- Web Hosting -->
+                <!-- Email Services -->
                 <div class="service-section">
-                    <span class="section-label">🌐 Web Hosting</span>
-                    <div class="service-row">
-                        <div class="service-label">Web Essential Plan</div>
-                        <select class="service-select" id="web_essential" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Year</option>
-                            <option value="2">2 Years</option>
-                            <option value="3">3 Years</option>
-                            <option value="5">5 Years</option>
+                    <span class="section-label">📧 Email Services (Per User)</span>
+
+                    <div class="service-row" style="grid-template-columns: 1fr 200px 120px;">
+                        <div class="service-label">Select Product</div>
+                        <select class="service-select" id="email_product" onchange="onEmailProductChange()">
+                            <option value="0">None</option>
+                            <option value="google_workspace">Google Workspace</option>
+                            <option value="microsoft_365">Microsoft 365</option>
+                            <option value="zoho_mail">Zoho Mail</option>
                         </select>
-                        <div class="service-price" id="web_essential_price">NPR 0</div>
+                        <div class="service-price">&nbsp;</div>
                     </div>
-                    <div class="service-row">
-                        <div class="service-label">Web Plus Plan</div>
-                        <select class="service-select" id="web_plus" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Year</option>
-                            <option value="2">2 Years</option>
-                            <option value="3">3 Years</option>
-                            <option value="5">5 Years</option>
+
+                    <div class="service-row" id="email_package_row" style="display:none; grid-template-columns: 1fr 120px 120px;">
+                        <div class="service-label">Package</div>
+                        <select class="service-select" id="email_package" onchange="updateCalculation()">
+                            <option value="0">Select package</option>
                         </select>
-                        <div class="service-price" id="web_plus_price">NPR 0</div>
+                        <div class="service-price" id="email_package_price">NPR 0</div>
                     </div>
-                    <div class="service-row">
-                        <div class="service-label">Web Pro Plan ⭐</div>
-                        <select class="service-select" id="web_pro" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Year</option>
-                            <option value="2">2 Years</option>
-                            <option value="3">3 Years</option>
-                            <option value="5">5 Years</option>
+
+                    <div class="service-row" id="email_users_row" style="display:none; grid-template-columns: 1fr 120px 120px;">
+                        <div class="service-label">Users</div>
+                        <select class="service-select" id="email_users" onchange="updateCalculation()">
+                            <option value="0">0 Users</option>
+                            <option value="1">1 User</option>
+                            <option value="5">5 Users</option>
+                            <option value="10">10 Users</option>
+                            <option value="25">25 Users</option>
                         </select>
-                        <div class="service-price" id="web_pro_price">NPR 0</div>
+                        <div class="service-price" id="email_users_price">&nbsp;</div>
                     </div>
-                    <div class="service-row">
+
+                </div>
                         <div class="service-label">Web Ultimate Plan</div>
                         <select class="service-select" id="web_ultimate" onchange="updateCalculation()">
                             <option value="0">Not Selected</option>
@@ -683,6 +682,7 @@
             google_workspace_standard: { monthly: 2170, yearly: 26040, unit: '/user' },
             google_workspace_plus: { monthly: 3410, yearly: 40920, unit: '/user' },
             microsoft_365_premium: { monthly: 3599, yearly: 43188, unit: '/user' },
+            microsoft_365_basic: { monthly: 549, yearly: 6588, unit: '/user' },
             zoho_mail_premium_50gb: { monthly: 620, yearly: 7440, unit: '/user' },
             nepal_vps_3c_6g: { monthly: 3780, yearly: 45360, unit: '/server' },
             international_vps_8c_16g: { monthly: 8000, yearly: 96000, unit: '/server' }
@@ -743,6 +743,30 @@
 
                 if (priceDisplay) priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
             }
+            // Handle grouped Email product selection (email_product)
+            const emailProduct = document.getElementById('email_product');
+            if (emailProduct) {
+                const prod = emailProduct.value;
+                if (prod && prod !== '0') {
+                    const pkgKey = document.getElementById('email_package').value;
+                    const users = parseInt(document.getElementById('email_users').value) || 0;
+                    if (pkgKey && pkgKey !== '0' && users > 0 && services[pkgKey]) {
+                        hasSelection = true;
+                        const pricePerUser = services[pkgKey][currentBillingPeriod];
+                        const itemTotal = pricePerUser * users;
+                        subtotal += itemTotal;
+                        // add grouped item at beginning
+                        selectedItems.unshift({
+                            label: `${prod === 'google_workspace' ? 'Google Workspace' : prod === 'microsoft_365' ? 'Microsoft 365' : 'Zoho Mail'} - ${document.getElementById('email_package').selectedOptions[0].text}`,
+                            qty: users,
+                            qtyLabel: `${users} Users`,
+                            price: pricePerUser,
+                            unit: '/user',
+                            total: itemTotal
+                        });
+                    }
+                }
+            }
 
             // Update display
             const selectedItemsDiv = document.getElementById('selectedItems');
@@ -780,74 +804,8 @@
         // Handle grouped product (Google Workspace): package + users
         function updateCalculationFromGroup(groupId) {
             if (groupId === 'google_workspace') {
-                const packageSelect = document.getElementById('google_workspace_package');
-                const usersSelect = document.getElementById('google_workspace_users');
-                const priceDisplay = document.getElementById('google_workspace_price');
-
-                const pkgKey = packageSelect.value; // e.g., google_workspace_starter
-                const users = parseInt(usersSelect.value) || 0;
-
-                if (pkgKey && pkgKey !== '0' && services[pkgKey]) {
-                    const pricePerUser = services[pkgKey][currentBillingPeriod];
-                    priceDisplay.textContent = `NPR ${pricePerUser.toLocaleString()}`;
-                } else {
-                    priceDisplay.textContent = 'NPR 0';
-                }
-
-                // synchronize with main update loop by temporarily setting a hidden select for the package key
-                // We'll compute the group contribution and inject into the displayed summary manually
-                // Re-run full calculation to include other services
+                // Older grouped handling not used; now email grouping handled by generic handlers
                 updateCalculation();
-
-                // Now, if package selected and users > 0, insert/replace group item in selectedItems display
-                const selectedItemsDiv = document.getElementById('selectedItems');
-                const summaryContent = document.getElementById('summaryContent');
-                const emptyState = document.getElementById('emptyState');
-
-                if (pkgKey && pkgKey !== '0' && users > 0 && services[pkgKey]) {
-                    const pricePerUser = services[pkgKey][currentBillingPeriod];
-                    const itemTotal = pricePerUser * users;
-
-                    // Build group item HTML
-                    const groupHtml = `<div class="summary-item">
-                        <div style="flex: 1;">
-                            <div class="summary-label">Google Workspace - ${packageSelect.options[packageSelect.selectedIndex].text}</div>
-                            <div style="font-size: 0.85em; color: #94a3b8; margin-top: 3px;">${users}× NPR ${pricePerUser.toLocaleString()}/user</div>
-                        </div>
-                        <span class="summary-value">NPR ${itemTotal.toLocaleString()}</span>
-                    </div>`;
-
-                    // Remove any existing Google Workspace grouped item
-                    document.querySelectorAll('#selectedItems .summary-item').forEach(node => {
-                        const lbl = node.querySelector('.summary-label');
-                        if (lbl && lbl.textContent && lbl.textContent.startsWith('Google Workspace -')) {
-                            node.remove();
-                        }
-                    });
-
-                    // Insert at top of selected items
-                    selectedItemsDiv.insertAdjacentHTML('afterbegin', groupHtml);
-                    summaryContent.style.display = 'block';
-                    emptyState.style.display = 'none';
-
-                    // Recompute totals including group
-                    // compute subtotal from other selections first
-                    let subtotal = 0;
-                    // sum existing summary values (excluding currency)
-                    document.querySelectorAll('#selectedItems .summary-item .summary-value').forEach(el => {
-                        const valText = el.textContent.replace(/[^0-9]/g, '');
-                        if (valText) subtotal += parseInt(valText);
-                    });
-
-                    const vat = Math.round(subtotal * VAT_RATE * 100) / 100;
-                    const total = Math.round((subtotal + vat) * 100) / 100;
-                    document.getElementById('subtotal').textContent = subtotal.toLocaleString();
-                    document.getElementById('vat').textContent = vat.toLocaleString();
-                    document.getElementById('total').textContent = total.toLocaleString();
-                } else {
-                    // No package selected or zero users — re-run main calculation to restore state
-                    updateCalculation();
-                }
             }
         }
 
@@ -923,6 +881,63 @@ From: NEST NEPAL - Professional Rate Calculator
             document.getElementById('summaryContent').style.display = 'none';
             document.getElementById('emptyState').style.display = 'block';
         }
+
+        function onEmailProductChange() {
+            const prod = document.getElementById('email_product').value;
+            const packageRow = document.getElementById('email_package_row');
+            const usersRow = document.getElementById('email_users_row');
+            const packageSelect = document.getElementById('email_package');
+
+            // Reset package options
+            packageSelect.innerHTML = '<option value="0">Select package</option>';
+
+            if (prod === '0') {
+                packageRow.style.display = 'none';
+                usersRow.style.display = 'none';
+                updateCalculation();
+                return;
+            }
+
+            // Populate package list based on product
+            const productPackages = {
+                google_workspace: [
+                    { key: 'google_workspace_starter', label: 'Starter (30GB)' },
+                    { key: 'google_workspace_standard', label: 'Standard (2TB)' },
+                    { key: 'google_workspace_plus', label: 'Plus (5TB)' }
+                ],
+                microsoft_365: [
+                    { key: 'microsoft_365_basic', label: 'Business Basic' },
+                    { key: 'microsoft_365_premium', label: 'Business Premium' }
+                ],
+                zoho_mail: [
+                    { key: 'zoho_mail_premium_50gb', label: 'Premium (50GB)' }
+                ]
+            };
+
+            const packages = productPackages[prod] || [];
+            packages.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.key;
+                opt.text = p.label;
+                packageSelect.appendChild(opt);
+            });
+
+            packageRow.style.display = 'grid';
+            usersRow.style.display = 'grid';
+            updateCalculation();
+        }
+
+        // Provide a default SVG logo so header looks updated if user hasn't uploaded their own
+        document.addEventListener('DOMContentLoaded', function() {
+            const img = document.getElementById('brandLogo');
+            if (img && !img.src) {
+                const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='360' height='72'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%232563eb'/><stop offset='1' stop-color='%237c3aed'/></linearGradient></defs><rect width='100%' height='100%' fill='white' rx='8'/><text x='20' y='45' font-family='Inter, Arial' font-weight='800' font-size='34' fill='url(%23g)'>NEST NEPAL</text></svg>`;
+                img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+                img.style.display = 'inline-block';
+                const logoText = document.getElementById('logoText');
+                if (logoText) logoText.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
