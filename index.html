@@ -77,26 +77,53 @@
             }
 
             .summary-card {
-                order: -1;
+                order: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .service-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 12px;
+            }
+            .service-row .service-price {
+                text-align: left;
+                font-size: 0.96em;
+            }
+            .service-row .service-select {
+                width: 100%;
+            }
+            .card {
+                padding: 18px;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+            body {
+                padding: 24px 16px;
+            }
+            .section-label {
+                font-size: 1.05em;
             }
         }
 
         /* Cards */
         .card {
             background: white;
-            border-radius: 8px;
-            padding: 18px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.04);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06);
         }
 
         .card-title {
-            font-size: 1.05em;
+            font-size: 1.15em;
             font-weight: 700;
             color: #1e293b;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .card-icon {
@@ -106,30 +133,30 @@
         /* Billing Toggle */
         .billing-toggle {
             display: flex;
-            gap: 8px;
-            margin-bottom: 18px;
+            gap: 10px;
+            margin-bottom: 24px;
             background: #f1f5f9;
-            padding: 4px;
-            border-radius: 6px;
+            padding: 6px;
+            border-radius: 8px;
             width: fit-content;
         }
 
         .billing-btn {
-            padding: 8px 16px;
+            padding: 10px 18px;
             border: none;
             background: transparent;
             color: #64748b;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 7px;
             transition: all 0.3s ease;
-            font-size: 0.95em;
+            font-size: 0.96em;
         }
 
         .billing-btn.active {
             background: white;
             color: #2563eb;
-            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
         }
 
         .billing-btn:hover {
@@ -138,9 +165,9 @@
 
         /* Service Sections */
         .service-section {
-            margin-bottom: 35px;
-            padding-bottom: 35px;
-            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .service-section:last-child {
@@ -151,25 +178,25 @@
 
         .section-label {
             display: block;
-            font-size: 1.1em;
+            font-size: 1.15em;
             font-weight: 700;
             color: #1e293b;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 3px solid #e2e8f0;
         }
 
         /* Service Rows */
         .service-row {
             display: grid;
             grid-template-columns: 1fr 140px 100px;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
-            margin-bottom: 10px;
-            padding: 8px;
+            margin-bottom: 14px;
+            padding: 12px;
             background: #fbfdff;
-            border-radius: 6px;
-            transition: background 0.15s ease;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .service-row.selected {
@@ -185,60 +212,63 @@
         .service-label {
             font-weight: 500;
             color: #334155;
-            font-size: 0.95em;
+            font-size: 0.98em;
         }
 
         .service-select {
-            padding: 6px 10px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 7px;
             background: white;
             color: #334155;
             font-weight: 500;
             cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.18s ease;
+            font-size: 0.92em;
+            transition: all 0.2s ease;
         }
 
         .service-select:hover {
             border-color: #2563eb;
-            background-color: #f8fafc;
+            background-color: #f0f9ff;
         }
 
         .service-select:focus {
             outline: none;
             border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
 
         .service-price {
             text-align: right;
             font-weight: 700;
             color: #2563eb;
-            font-size: 0.95em;
+            font-size: 0.97em;
         }
 
         /* Summary Card */
         .summary-card {
             position: sticky;
-            top: 18px;
+            top: 20px;
             height: fit-content;
-            padding: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e0e7ff;
         }
 
         #emptyState {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
         }
 
         .empty-state-icon {
-            font-size: 3em;
+            font-size: 3.5em;
             margin-bottom: 15px;
         }
 
         #emptyState p {
             color: #94a3b8;
             font-weight: 500;
+            font-size: 0.95em;
         }
 
         #summaryContent {
@@ -246,33 +276,33 @@
         }
 
         #selectedItems {
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
             margin-bottom: 20px;
-            padding-right: 5px;
+            padding-right: 8px;
         }
 
         .summary-section {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .summary-section-title {
             display: block;
-            font-size: 0.85em;
-            font-weight: 700;
+            font-size: 0.8em;
+            font-weight: 800;
             color: #94a3b8;
             text-transform: uppercase;
             margin-bottom: 10px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
         }
 
         .summary-item {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #eef2f7;
-            font-size: 0.88em;
+            font-size: 0.9em;
         }
 
         .summary-item:last-child {
@@ -291,61 +321,64 @@
 
         /* VAT Section */
         .vat-section {
-            background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #f59e0b;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 18px;
+            border-radius: 10px;
+            margin: 22px 0;
+            border-left: 5px solid #f59e0b;
         }
 
         .vat-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 600;
+            font-weight: 700;
             color: #7c2d12;
+            font-size: 0.95em;
         }
 
         /* Total Box */
         .total-box {
             background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
+            padding: 24px;
+            border-radius: 10px;
+            margin: 24px 0;
             text-align: center;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
         }
 
         .total-label {
             color: rgba(255,255,255,0.9);
-            font-size: 0.85em;
-            font-weight: 700;
+            font-size: 0.8em;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            letter-spacing: 0.6px;
+            margin-bottom: 10px;
         }
 
         .total-amount {
             color: white;
-            font-size: 2em;
+            font-size: 2.2em;
             font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         /* Action Buttons */
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 24px;
         }
 
         .btn {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 9px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.95em;
+            font-size: 0.96em;
         }
 
         .btn-primary {
@@ -355,7 +388,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
         }
 
         .btn-secondary {
@@ -457,7 +490,7 @@
                 <div class="service-section">
                     <span class="section-label">📧 Email Services (Per User)</span>
 
-                    <div class="service-row" style="grid-template-columns: 1fr 200px 120px;">
+                    <div class="service-row">
                         <div class="service-label">Select Product</div>
                         <select class="service-select" id="email_product" onchange="onEmailProductChange()">
                             <option value="0">None</option>
@@ -468,7 +501,7 @@
                         <div class="service-price">&nbsp;</div>
                     </div>
 
-                    <div class="service-row" id="email_package_row" style="display:none; grid-template-columns: 1fr 120px 120px;">
+                    <div class="service-row" id="email_package_row" style="display:none;">
                         <div class="service-label">Package</div>
                         <select class="service-select" id="email_package" onchange="updateCalculation()">
                             <option value="0">Select package</option>
@@ -476,8 +509,8 @@
                         <div class="service-price" id="email_package_price">NPR 0</div>
                     </div>
 
-                    <div class="service-row" id="email_users_row" style="display:none; grid-template-columns: 1fr 120px 120px;">
-                        <div class="service-label">Users</div>
+                    <div class="service-row" id="email_users_row" style="display:none;">
+                        <div class="service-label">Number of Users</div>
                         <select class="service-select" id="email_users" onchange="updateCalculation()">
                             <option value="0">0 Users</option>
                             <option value="1">1 User</option>
@@ -487,8 +520,12 @@
                         </select>
                         <div class="service-price" id="email_users_price">&nbsp;</div>
                     </div>
-
                 </div>
+
+                <!-- Web Hosting -->
+                <div class="service-section">
+                    <span class="section-label">🌐 Web Hosting</span>
+                    <div class="service-row">
                         <div class="service-label">Web Ultimate Plan</div>
                         <select class="service-select" id="web_ultimate" onchange="updateCalculation()">
                             <option value="0">Not Selected</option>
@@ -536,52 +573,6 @@
                             <option value="5">5 Domains</option>
                         </select>
                         <div class="service-price" id="domain_org_price">NPR 0</div>
-                    </div>
-                </div>
-
-                <!-- Email Services -->
-                <div class="service-section">
-                    <span class="section-label">📧 Email Services (Per User/Month)</span>
-                    <div class="service-row" id="google_workspace_row" onclick="selectRow(this)">
-                        <div class="service-label">Google Workspace (choose package)</div>
-                        <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
-                            <select class="service-select" id="google_workspace_package" onchange="updateCalculationFromGroup('google_workspace')">
-                                <option value="0">No Package</option>
-                                <option value="google_workspace_starter">Starter (30GB)</option>
-                                <option value="google_workspace_standard">Standard (2TB)</option>
-                                <option value="google_workspace_plus">Plus (5TB)</option>
-                            </select>
-                            <select class="service-select" id="google_workspace_users" onchange="updateCalculationFromGroup('google_workspace')">
-                                <option value="0">0 Users</option>
-                                <option value="1">1 User</option>
-                                <option value="5">5 Users</option>
-                                <option value="10">10 Users</option>
-                                <option value="25">25 Users</option>
-                            </select>
-                        </div>
-                        <div class="service-price" id="google_workspace_price">NPR 0</div>
-                    </div>
-                    <div class="service-row">
-                        <div class="service-label">Microsoft 365 Premium</div>
-                        <select class="service-select" id="microsoft_365_premium" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 User</option>
-                            <option value="5">5 Users</option>
-                            <option value="10">10 Users</option>
-                            <option value="25">25 Users</option>
-                        </select>
-                        <div class="service-price" id="microsoft_365_premium_price">NPR 0</div>
-                    </div>
-                    <div class="service-row">
-                        <div class="service-label">Zoho Mail Premium</div>
-                        <select class="service-select" id="zoho_mail_premium_50gb" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 User</option>
-                            <option value="5">5 Users</option>
-                            <option value="10">10 Users</option>
-                            <option value="25">25 Users</option>
-                        </select>
-                        <div class="service-price" id="zoho_mail_premium_50gb_price">NPR 0</div>
                     </div>
                 </div>
 
