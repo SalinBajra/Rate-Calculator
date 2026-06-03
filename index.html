@@ -1480,17 +1480,61 @@ From: NEST NEPAL - Professional Rate Calculator
             }, 3000);
         }
 
+        // Create Default Professional Logo
+        function createDefaultLogo() {
+            const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+                <defs>
+                    <linearGradient id='logoGrad1' x1='0%' y1='0%' x2='100%' y2='100%'>
+                        <stop offset='0%' style='stop-color:#60a5fa;stop-opacity:1' />
+                        <stop offset='100%' style='stop-color:#3b82f6;stop-opacity:1' />
+                    </linearGradient>
+                    <linearGradient id='logoGrad2' x1='0%' y1='0%' x2='100%' y2='100%'>
+                        <stop offset='0%' style='stop-color:#a78bfa;stop-opacity:1' />
+                        <stop offset='100%' style='stop-color:#7c3aed;stop-opacity:1' />
+                    </linearGradient>
+                </defs>
+                
+                <!-- Background Circle -->
+                <circle cx='100' cy='100' r='95' fill='rgba(30,27,75,0.3)' stroke='url(#logoGrad1)' stroke-width='2'/>
+                
+                <!-- Nest Structure - Three curved elements -->
+                <g transform='translate(100, 100)'>
+                    <!-- Outer nest circle -->
+                    <circle cx='0' cy='0' r='45' fill='none' stroke='url(#logoGrad1)' stroke-width='3' opacity='0.4'/>
+                    
+                    <!-- Nest wires/strands - creating nest pattern -->
+                    <path d='M -30 -40 Q -45 -20 -40 10 Q -35 25 -15 30' fill='none' stroke='url(#logoGrad1)' stroke-width='2.5' stroke-linecap='round'/>
+                    <path d='M 30 -40 Q 45 -20 40 10 Q 35 25 15 30' fill='none' stroke='url(#logoGrad1)' stroke-width='2.5' stroke-linecap='round'/>
+                    <path d='M 0 -48 Q 20 -30 25 5 Q 20 28 5 35' fill='none' stroke='url(#logoGrad2)' stroke-width='2.5' stroke-linecap='round'/>
+                    <path d='M 0 -48 Q -20 -30 -25 5 Q -20 28 -5 35' fill='none' stroke='url(#logoGrad2)' stroke-width='2.5' stroke-linecap='round'/>
+                    
+                    <!-- Center nest egg - Nepal mountain inspired -->
+                    <path d='M -12 0 L 0 -18 L 12 0 Q 12 12 0 16 Q -12 12 -12 0' fill='url(#logoGrad2)' opacity='0.9'/>
+                    
+                    <!-- Mountain peak inside (representing Nepal) -->
+                    <path d='M -5 -8 L 0 -12 L 5 -8' fill='#f472b6' opacity='0.8'/>
+                    
+                    <!-- Nest base layer -->
+                    <ellipse cx='0' cy='30' rx='35' ry='8' fill='url(#logoGrad1)' opacity='0.3'/>
+                </g>
+                
+                <!-- Text below -->
+                <text x='100' y='165' font-family='Inter, Arial' font-size='14' font-weight='700' text-anchor='middle' fill='#60a5fa'>NEST NEPAL</text>
+            </svg>`;
+            
+            return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('nestUser');
             const savedLogo = localStorage.getItem('nestLogo');
 
-            if (savedLogo) {
-                const img = document.getElementById('companyLogo');
-                img.src = savedLogo;
-                img.style.display = 'block';
-                document.getElementById('logoPlaceholder').style.display = 'none';
-            }
+            // Set default logo
+            const img = document.getElementById('companyLogo');
+            img.src = savedLogo || createDefaultLogo();
+            img.style.display = 'block';
+            document.getElementById('logoPlaceholder').style.display = 'none';
 
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
