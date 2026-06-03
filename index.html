@@ -262,7 +262,7 @@
         .summary-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 10px 0;
             border-bottom: 1px solid #e2e8f0;
             font-size: 0.9em;
@@ -660,19 +660,19 @@
         let currentBillingPeriod = 'monthly';
 
         const services = {
-            web_essential: { monthly: 90, yearly: 1080 },
-            web_plus: { monthly: 150, yearly: 1800 },
-            web_pro: { monthly: 270, yearly: 3240 },
-            web_ultimate: { monthly: 360, yearly: 4320 },
-            domain_com: { monthly: 208, yearly: 2500 },
-            domain_net: { monthly: 250, yearly: 3000 },
-            domain_org: { monthly: 250, yearly: 3000 },
-            google_workspace_starter: { monthly: 599, yearly: 7188 },
-            google_workspace_plus: { monthly: 3410, yearly: 40920 },
-            microsoft_365_premium: { monthly: 3599, yearly: 43188 },
-            zoho_mail_premium_50gb: { monthly: 620, yearly: 7440 },
-            nepal_vps_3c_6g: { monthly: 3780, yearly: 45360 },
-            international_vps_8c_16g: { monthly: 8000, yearly: 96000 }
+            web_essential: { monthly: 90, yearly: 1080, unit: '/year' },
+            web_plus: { monthly: 150, yearly: 1800, unit: '/year' },
+            web_pro: { monthly: 270, yearly: 3240, unit: '/year' },
+            web_ultimate: { monthly: 360, yearly: 4320, unit: '/year' },
+            domain_com: { monthly: 208, yearly: 2500, unit: '/domain' },
+            domain_net: { monthly: 250, yearly: 3000, unit: '/domain' },
+            domain_org: { monthly: 250, yearly: 3000, unit: '/domain' },
+            google_workspace_starter: { monthly: 599, yearly: 7188, unit: '/user' },
+            google_workspace_plus: { monthly: 3410, yearly: 40920, unit: '/user' },
+            microsoft_365_premium: { monthly: 3599, yearly: 43188, unit: '/user' },
+            zoho_mail_premium_50gb: { monthly: 620, yearly: 7440, unit: '/user' },
+            nepal_vps_3c_6g: { monthly: 3780, yearly: 45360, unit: '/server' },
+            international_vps_8c_16g: { monthly: 8000, yearly: 96000, unit: '/server' }
         };
 
         function setBillingPeriod(period) {
@@ -693,12 +693,13 @@
             const selectedItems = [];
 
             // Update price displays and calculate
-            for (const [serviceId, prices] of Object.entries(services)) {
+            for (const [serviceId, serviceData] of Object.entries(services)) {
                 const select = document.getElementById(serviceId);
                 const priceDisplay = document.getElementById(serviceId + '_price');
                 
                 const qty = parseInt(select.value) || 0;
-                const price = prices[currentBillingPeriod];
+                const price = serviceData[currentBillingPeriod];
+                const unit = serviceData.unit;
                 
                 if (qty > 0) {
                     hasSelection = true;
@@ -710,8 +711,10 @@
                     
                     selectedItems.push({
                         label: label,
-                        qty: qtyLabel,
+                        qty: qty,
+                        qtyLabel: qtyLabel,
                         price: price,
+                        unit: unit,
                         total: itemTotal
                     });
                 }
@@ -728,7 +731,10 @@
                 let html = '';
                 selectedItems.forEach(item => {
                     html += `<div class="summary-item">
-                        <span class="summary-label">${item.label} (${item.qty})</span>
+                        <div style="flex: 1;">
+                            <div class="summary-label">${item.label}</div>
+                            <div style="font-size: 0.85em; color: #94a3b8; margin-top: 3px;">${item.qty}× NPR ${item.price.toLocaleString()}${item.unit}</div>
+                        </div>
                         <span class="summary-value">NPR ${item.total.toLocaleString()}</span>
                     </div>`;
                 });
@@ -750,21 +756,39 @@
         }
 
         function copyToClipboard() {
+            const summaryItems = document.querySelectorAll('#selectedItems .summary-item');
             const subtotal = document.getElementById('subtotal').textContent;
             const vat = document.getElementById('vat').textContent;
             const total = document.getElementById('total').textContent;
             const period = currentBillingPeriod === 'monthly' ? 'Monthly' : 'Yearly';
 
-            const text = `
-RATE CALCULATION (${period})
-═══════════════════════════════════
-Subtotal: NPR ${subtotal}
-VAT (13%): NPR ${vat}
-───────────────────────────────────
-TOTAL PAYABLE: NPR ${total}
-═══════════════════════════════════
+            // Build detailed quotation
+            let itemsText = '';
+            let itemCount = 0;
+            
+            summaryItems.forEach(item => {
+                const label = item.querySelector('.summary-label').textContent;
+                const details = item.querySelector('div:nth-child(1) > div:nth-child(2)').textContent;
+                const price = item.querySelector('.summary-value').textContent;
+                itemsText += `${++itemCount}. ${label}\n   ${details}\n   Total: ${price}\n\n`;
+            });
 
-Calculated on: ${new Date().toLocaleString('en-NP')}
+            const text = `
+PROFESSIONAL QUOTATION (${period})
+════════════════════════════════════════════════════════════════
+
+SERVICES:
+${itemsText}
+
+════════════════════════════════════════════════════════════════
+Subtotal (Base Amount): NPR ${subtotal}
+VAT (13% - Nepal Compliance): NPR ${vat}
+────────────────────────────────────────────────────────────────
+TOTAL PAYABLE: NPR ${total}
+════════════════════════════════════════════════════════════════
+
+Generated on: ${new Date().toLocaleString('en-NP')}
+From: NEST NEPAL - Professional Rate Calculator
             `.trim();
 
             navigator.clipboard.writeText(text).then(() => {
