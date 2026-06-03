@@ -15,102 +15,259 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f0f1e 100%);
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
             color: #e2e8f0;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
+        /* Login Modal */
+        #loginModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
         }
 
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 60px;
+        #loginModal.hidden {
+            display: none;
         }
 
-        .logo {
-            font-size: 2.8em;
-            font-weight: 900;
+        .login-card {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(147, 112, 219, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .login-card h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 15px;
-            letter-spacing: -1px;
         }
 
-        header h1 {
-            font-size: 2.4em;
-            color: #f1f5f9;
-            margin-bottom: 12px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        header p {
-            font-size: 1.05em;
+        .login-card p {
             color: #cbd5e1;
-            margin-bottom: 20px;
-            font-weight: 500;
+            margin-bottom: 30px;
+            font-size: 0.95em;
         }
 
-        .vat-banner {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
-            border: 2px solid #ec4899;
-            padding: 14px 24px;
-            border-radius: 10px;
-            color: #f472b6;
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            color: #f1f5f9;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
             font-weight: 700;
             font-size: 0.96em;
-            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        /* Main Content Layout */
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .demo-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(71, 85, 105, 0.4);
+            color: #cbd5e1;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            border-color: rgba(148, 163, 184, 0.5);
+            background: rgba(71, 85, 105, 0.6);
+        }
+
+        /* Main App */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-container.hidden {
+            display: none;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.6) 0%, rgba(20, 20, 40, 0.6) 100%);
+            border: 1px solid rgba(147, 112, 219, 0.2);
+            padding: 20px 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(20px);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-upload {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: rgba(51, 65, 85, 0.4);
+            border: 2px dashed rgba(96, 165, 250, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .logo-upload:hover {
+            border-color: #60a5fa;
+            background: rgba(51, 65, 85, 0.6);
+        }
+
+        .logo-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-upload-hidden {
+            display: none;
+        }
+
+        .header-info h1 {
+            font-size: 2em;
+            color: #f1f5f9;
+            margin-bottom: 5px;
+        }
+
+        .header-info p {
+            color: #cbd5e1;
+            font-size: 0.95em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-info {
+            text-align: right;
+            padding-right: 15px;
+            border-right: 2px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .user-name {
+            color: #f1f5f9;
+            font-weight: 700;
+        }
+
+        .user-email {
+            color: #94a3b8;
+            font-size: 0.85em;
+        }
+
+        .btn-share {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.2) 0%, rgba(167, 139, 250, 0.2) 100%);
+            border: 2px solid #60a5fa;
+            color: #60a5fa;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-share:hover {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.3) 0%, rgba(167, 139, 250, 0.3) 100%);
+        }
+
+        .btn-logout {
+            padding: 10px 18px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            color: #f87171;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 360px;
+            grid-template-columns: 1fr 380px;
             gap: 30px;
             margin-bottom: 40px;
-        }
-
-        @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
-            .summary-card {
-                order: 0;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .service-row {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                padding: 12px;
-            }
-            .service-row .service-price {
-                text-align: left;
-                font-size: 0.96em;
-            }
-            .service-row .service-select {
-                width: 100%;
-            }
-            .card {
-                padding: 18px;
-            }
-            header h1 {
-                font-size: 1.8em;
-            }
-            body {
-                padding: 24px 16px;
-            }
-            .section-label {
-                font-size: 1.05em;
-            }
         }
 
         /* Cards */
@@ -209,12 +366,6 @@
             border: 1px solid rgba(148, 163, 184, 0.1);
             border-radius: 10px;
             transition: all 0.3s ease;
-        }
-
-        .service-row.selected {
-            background: linear-gradient(90deg, rgba(96, 165, 250, 0.15) 0%, rgba(167, 139, 250, 0.1) 100%);
-            border: 2px solid rgba(96, 165, 250, 0.3);
-            box-shadow: 0 0 30px rgba(96, 165, 250, 0.15);
         }
 
         .service-row:hover {
@@ -390,10 +541,10 @@
 
         .btn {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             border: 2px solid transparent;
             border-radius: 10px;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.96em;
@@ -448,6 +599,78 @@
             }
         }
 
+        /* Share Modal */
+        .share-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .share-modal.hidden {
+            display: none;
+        }
+
+        .share-card {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(147, 112, 219, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .share-card h3 {
+            color: #f1f5f9;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .share-link-input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(51, 65, 85, 0.4);
+            border: 2px solid rgba(96, 165, 250, 0.3);
+            border-radius: 8px;
+            color: #f1f5f9;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .copy-link-btn {
+            width: 100%;
+            padding: 12px;
+            background: #60a5fa;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-link-btn:hover {
+            background: #3b82f6;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -458,7 +681,7 @@
             margin-top: 60px;
         }
 
-        /* Scrollbar Styling */
+        /* Scrollbar */
         #selectedItems::-webkit-scrollbar {
             width: 6px;
         }
@@ -477,397 +700,647 @@
             background: rgba(96, 165, 250, 0.6);
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
 
             .summary-card {
-                order: 0;
+                position: static;
+                margin-top: 30px;
             }
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 24px 16px;
-            }
-
             header {
-                margin-bottom: 40px;
+                flex-direction: column;
+                gap: 20px;
             }
 
-            header h1 {
-                font-size: 2em;
+            .logo-section {
+                width: 100%;
             }
 
-            .logo {
-                font-size: 2.2em;
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
             }
 
-            .card {
-                padding: 20px;
+            .user-info {
+                border-right: none;
+                padding-right: 0;
+                padding-bottom: 15px;
+                border-bottom: 2px solid rgba(148, 163, 184, 0.2);
             }
 
-            .card-title {
-                font-size: 1.1em;
-                margin-bottom: 18px;
-            }
-
-            .section-label {
-                font-size: 1.1em;
-                margin-bottom: 18px;
+            .service-row {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 600px) {
             body {
-                padding: 20px 12px;
-            }
-
-            .service-row {
-                grid-template-columns: 1fr;
-                gap: 10px;
                 padding: 12px;
-                margin-bottom: 12px;
             }
 
-            .service-row .service-price {
-                text-align: left;
-                font-size: 0.96em;
-            }
-
-            .service-row .service-select {
-                width: 100%;
+            header {
+                padding: 16px;
             }
 
             .card {
                 padding: 16px;
             }
 
-            .card-title {
-                font-size: 1em;
-                margin-bottom: 16px;
-            }
-
-            header h1 {
-                font-size: 1.6em;
-            }
-
-            .logo {
-                font-size: 1.8em;
-            }
-
-            header p {
-                font-size: 0.95em;
-            }
-
-            .vat-banner {
-                font-size: 0.9em;
-                padding: 10px 16px;
-            }
-
-            .section-label {
-                font-size: 1em;
-                margin-bottom: 16px;
-            }
-
-            .billing-toggle {
-                margin-bottom: 20px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .btn {
-                padding: 14px;
-                font-size: 0.94em;
-            }
-
-            .summary-card {
-                top: 10px;
-                padding: 18px;
-            }
-
-            #selectedItems {
-                max-height: 200px;
-                margin-bottom: 18px;
-            }
-
-            .summary-item {
-                padding: 8px 0;
-                font-size: 0.88em;
-            }
-
-            .total-amount {
-                font-size: 1.8em;
-            }
-
-            .vat-section {
-                padding: 16px;
-                margin: 20px 0;
-            }
-
-            .total-box {
-                padding: 20px;
-                margin: 20px 0;
+            .login-card {
+                padding: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div style="display:flex; gap:12px; align-items:center; justify-content:center; flex-direction:column;">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <img id="brandLogo" src="" alt="Nest Nepal" style="height:56px; width:auto; border-radius:8px; display:none; object-fit:contain; box-shadow:0 6px 18px rgba(15,23,42,0.06);">
-                    <div class="logo" id="logoText">NEST NEPAL</div>
-                </div>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <h1 style="margin-bottom:0;">Rate Calculator</h1>
-                </div>
-                <p>Professional Pricing Calculator with 13% VAT</p>
-                    <div class="vat-banner">⚠️ All prices include 13% VAT as per Nepal regulations</div>
+    <!-- Login Modal -->
+    <div id="loginModal">
+        <div class="login-card">
+            <h2>Nest Nepal</h2>
+            <p>Professional Rate Calculator</p>
+            
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="nameInput" placeholder="Your Name" />
             </div>
-        </header>
-
-        <div class="main-content">
-            <!-- Services Selection -->
-            <div class="card">
-                <div class="card-title">
-                    <span class="card-icon">⚙️</span>
-                    Configure Services
-                </div>
-
-                <div class="billing-toggle">
-                    <button class="billing-btn active" onclick="setBillingPeriod('monthly')">Monthly</button>
-                    <button class="billing-btn" onclick="setBillingPeriod('yearly')">Yearly</button>
-                </div>
-
-                <!-- Email Services -->
-                <div class="service-section">
-                    <span class="section-label">📧 Email Services (Per User)</span>
-
-                    <div class="service-row">
-                        <div class="service-label">Select Product</div>
-                        <select class="service-select" id="email_product" onchange="onEmailProductChange()">
-                            <option value="0">None</option>
-                            <option value="google_workspace">Google Workspace</option>
-                            <option value="microsoft_365">Microsoft 365</option>
-                            <option value="zoho_mail">Zoho Mail</option>
-                        </select>
-                        <div class="service-price">&nbsp;</div>
-                    </div>
-
-                    <div class="service-row" id="email_package_row" style="display:none;">
-                        <div class="service-label">Package</div>
-                        <select class="service-select" id="email_package" onchange="updateCalculation()">
-                            <option value="0">Select package</option>
-                        </select>
-                        <div class="service-price" id="email_package_price">NPR 0</div>
-                    </div>
-
-                    <div class="service-row" id="email_users_row" style="display:none;">
-                        <div class="service-label">Number of Users</div>
-                        <select class="service-select" id="email_users" onchange="updateCalculation()">
-                            <option value="0">0 Users</option>
-                            <option value="1">1 User</option>
-                            <option value="5">5 Users</option>
-                            <option value="10">10 Users</option>
-                            <option value="25">25 Users</option>
-                        </select>
-                        <div class="service-price" id="email_users_price">&nbsp;</div>
-                    </div>
-                </div>
-
-                <!-- Web Hosting -->
-                <div class="service-section">
-                    <span class="section-label">🌐 Web Hosting</span>
-                    <div class="service-row">
-                        <div class="service-label">Web Ultimate Plan</div>
-                        <select class="service-select" id="web_ultimate" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Year</option>
-                            <option value="2">2 Years</option>
-                            <option value="3">3 Years</option>
-                            <option value="5">5 Years</option>
-                        </select>
-                        <div class="service-price" id="web_ultimate_price">NPR 0</div>
-                    </div>
-                </div>
-
-                <!-- Domains -->
-                <div class="service-section">
-                    <span class="section-label">🔗 Domain Registration</span>
-                    <div class="service-row">
-                        <div class="service-label">.COM Domain</div>
-                        <select class="service-select" id="domain_com" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Domain</option>
-                            <option value="2">2 Domains</option>
-                            <option value="3">3 Domains</option>
-                            <option value="5">5 Domains</option>
-                        </select>
-                        <div class="service-price" id="domain_com_price">NPR 0</div>
-                    </div>
-                    <div class="service-row">
-                        <div class="service-label">.NET Domain</div>
-                        <select class="service-select" id="domain_net" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Domain</option>
-                            <option value="2">2 Domains</option>
-                            <option value="3">3 Domains</option>
-                            <option value="5">5 Domains</option>
-                        </select>
-                        <div class="service-price" id="domain_net_price">NPR 0</div>
-                    </div>
-                    <div class="service-row">
-                        <div class="service-label">.ORG Domain</div>
-                        <select class="service-select" id="domain_org" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Domain</option>
-                            <option value="2">2 Domains</option>
-                            <option value="3">3 Domains</option>
-                            <option value="5">5 Domains</option>
-                        </select>
-                        <div class="service-price" id="domain_org_price">NPR 0</div>
-                    </div>
-                </div>
-
-                <!-- VPS Hosting -->
-                <div class="service-section">
-                    <span class="section-label">⚙️ VPS Hosting</span>
-                    <div class="service-row">
-                        <div class="service-label">Nepal VPS 3C/6GB ⭐</div>
-                        <select class="service-select" id="nepal_vps_3c_6g" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Server</option>
-                            <option value="2">2 Servers</option>
-                            <option value="5">5 Servers</option>
-                        </select>
-                        <div class="service-price" id="nepal_vps_3c_6g_price">NPR 0</div>
-                    </div>
-                    <div class="service-row">
-                        <div class="service-label">International VPS 8C/16GB</div>
-                        <select class="service-select" id="international_vps_8c_16g" onchange="updateCalculation()">
-                            <option value="0">Not Selected</option>
-                            <option value="1">1 Server</option>
-                            <option value="2">2 Servers</option>
-                            <option value="5">5 Servers</option>
-                        </select>
-                        <div class="service-price" id="international_vps_8c_16g_price">NPR 0</div>
-                    </div>
-                </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="emailInput" placeholder="your@email.com" />
             </div>
-
-            <!-- Summary Panel -->
-            <div class="card summary-card">
-                <div class="card-title">
-                    <span class="card-icon">💰</span>
-                    Price Summary
-                </div>
-
-                <div id="summaryContent" style="display: none;">
-                    <div id="selectedItems"></div>
-
-                    <div class="summary-section">
-                        <span class="summary-section-title">Subtotal</span>
-                        <div class="summary-item">
-                            <span class="summary-label">Base Amount</span>
-                            <span class="summary-value">NPR <span id="subtotal">0</span></span>
-                        </div>
-                    </div>
-
-                    <div class="vat-section">
-                        <div class="vat-row">
-                            <span>VAT (13%)</span>
-                            <span style="font-weight: 700;">NPR <span id="vat">0</span></span>
-                        </div>
-                    </div>
-
-                    <div class="total-box">
-                        <div class="total-label">TOTAL PAYABLE</div>
-                        <div class="total-amount">NPR <span id="total">0</span></div>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="copyToClipboard()">📋 Copy Quote</button>
-                        <button class="btn btn-secondary" onclick="clearCalculation()">🔄 Reset</button>
-                    </div>
-                </div>
-
-                <div id="emptyState" style="display: block;">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📊</div>
-                        <p>Select services to generate quote</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="success-message" id="successMessage">
-            ✓ Quote copied to clipboard!
-        </div>
-
-        <div class="footer">
-            <p>Nest Nepal Professional Rate Calculator | 13% VAT Included | © 2024</p>
+            
+            <button class="login-btn" onclick="loginUser()">Login</button>
+            <button class="demo-btn" onclick="demoLogin()">Demo Login</button>
         </div>
     </div>
 
-    <script>
-        const VAT_RATE = 0.13; // 13% VAT for Nepal
-        let currentBillingPeriod = 'monthly';
+    <!-- Share Modal -->
+    <div id="shareModal" class="share-modal hidden">
+        <div class="share-card">
+            <button class="close-modal" onclick="closeShare()">✕</button>
+            <h3>Share Quotation</h3>
+            <p style="color: #cbd5e1; margin-bottom: 15px; font-size: 0.9em;">Share this quotation link with your team:</p>
+            <input type="text" class="share-link-input" id="shareLink" readonly />
+            <button class="copy-link-btn" onclick="copyShareLink()">Copy Share Link</button>
+        </div>
+    </div>
 
+    <!-- Main App -->
+    <div id="appContainer" class="app-container hidden">
+        <header>
+            <div class="logo-section">
+                <div class="logo-upload" onclick="triggerLogoUpload()">
+                    <img id="companyLogo" src="" alt="Logo" style="display:none;" />
+                    <span id="logoPlaceholder" style="color: #60a5fa; font-size: 1.5em;">📷</span>
+                </div>
+                <input type="file" id="logoInput" class="logo-upload-hidden" accept="image/*" onchange="handleLogoUpload()" />
+                <div class="header-info">
+                    <h1>Rate Calculator</h1>
+                    <p>Professional Pricing Calculator with 13% VAT</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="user-info">
+                    <div class="user-name" id="userName"></div>
+                    <div class="user-email" id="userEmail"></div>
+                </div>
+                <button class="btn-share" onclick="openShare()">📤 Share</button>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-content">
+                <!-- Services -->
+                <div class="card">
+                    <div class="card-title">
+                        <span class="card-icon">⚙️</span>
+                        Configure Services
+                    </div>
+
+                    <div class="billing-toggle">
+                        <button class="billing-btn active" onclick="setBillingPeriod('monthly')">Monthly</button>
+                        <button class="billing-btn" onclick="setBillingPeriod('yearly')">Yearly</button>
+                    </div>
+
+                    <!-- Web Hosting -->
+                    <div class="service-section">
+                        <span class="section-label">🌐 Web Hosting Plans</span>
+                        <div class="service-row">
+                            <div class="service-label">Web Essential (1 Website)</div>
+                            <select class="service-select" id="web_essential" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Plan</option>
+                                <option value="3">3 Plans</option>
+                                <option value="5">5 Plans</option>
+                            </select>
+                            <div class="service-price" id="web_essential_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Web Plus (5 Websites)</div>
+                            <select class="service-select" id="web_plus" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Plan</option>
+                                <option value="3">3 Plans</option>
+                                <option value="5">5 Plans</option>
+                            </select>
+                            <div class="service-price" id="web_plus_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Web Pro (Unlimited)</div>
+                            <select class="service-select" id="web_pro" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Plan</option>
+                                <option value="3">3 Plans</option>
+                                <option value="5">5 Plans</option>
+                            </select>
+                            <div class="service-price" id="web_pro_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Web Ultimate (Premium)</div>
+                            <select class="service-select" id="web_ultimate" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Plan</option>
+                                <option value="3">3 Plans</option>
+                                <option value="5">5 Plans</option>
+                            </select>
+                            <div class="service-price" id="web_ultimate_price">NPR 0</div>
+                        </div>
+                    </div>
+
+                    <!-- Cloud Hosting -->
+                    <div class="service-section">
+                        <span class="section-label">☁️ Cloud Hosting</span>
+                        <div class="service-row">
+                            <div class="service-label">Cloud Basic</div>
+                            <select class="service-select" id="cloud_basic" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Instance</option>
+                                <option value="3">3 Instances</option>
+                                <option value="5">5 Instances</option>
+                            </select>
+                            <div class="service-price" id="cloud_basic_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Cloud Pro</div>
+                            <select class="service-select" id="cloud_pro" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Instance</option>
+                                <option value="3">3 Instances</option>
+                                <option value="5">5 Instances</option>
+                            </select>
+                            <div class="service-price" id="cloud_pro_price">NPR 0</div>
+                        </div>
+                    </div>
+
+                    <!-- VPS Hosting -->
+                    <div class="service-section">
+                        <span class="section-label">⚡ VPS Hosting</span>
+                        <div class="service-row">
+                            <div class="service-label">VPS 2GB RAM (Nepal)</div>
+                            <select class="service-select" id="vps_2gb_nepal" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Server</option>
+                                <option value="2">2 Servers</option>
+                                <option value="5">5 Servers</option>
+                            </select>
+                            <div class="service-price" id="vps_2gb_nepal_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">VPS 4GB RAM (Nepal)</div>
+                            <select class="service-select" id="vps_4gb_nepal" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Server</option>
+                                <option value="2">2 Servers</option>
+                                <option value="5">5 Servers</option>
+                            </select>
+                            <div class="service-price" id="vps_4gb_nepal_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">VPS International 8GB</div>
+                            <select class="service-select" id="vps_8gb_intl" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Server</option>
+                                <option value="2">2 Servers</option>
+                                <option value="5">5 Servers</option>
+                            </select>
+                            <div class="service-price" id="vps_8gb_intl_price">NPR 0</div>
+                        </div>
+                    </div>
+
+                    <!-- Email & Collaboration -->
+                    <div class="service-section">
+                        <span class="section-label">📧 Email & Collaboration</span>
+                        <div class="service-row">
+                            <div class="service-label">Google Workspace Starter</div>
+                            <select class="service-select" id="google_starter" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                            <div class="service-price" id="google_starter_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Google Workspace Standard</div>
+                            <select class="service-select" id="google_standard" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                            <div class="service-price" id="google_standard_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Google Workspace Plus</div>
+                            <select class="service-select" id="google_plus" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                            <div class="service-price" id="google_plus_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Microsoft 365 Business Basic</div>
+                            <select class="service-select" id="ms365_basic" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                            <div class="service-price" id="ms365_basic_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Microsoft 365 Business Premium</div>
+                            <select class="service-select" id="ms365_premium" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                            <div class="service-price" id="ms365_premium_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Zoho Mail Premium</div>
+                            <select class="service-select" id="zoho_mail" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                            <div class="service-price" id="zoho_mail_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Zoho Workplace</div>
+                            <select class="service-select" id="zoho_workplace" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                                <option value="25">25 Users</option>
+                            </select>
+                            <div class="service-price" id="zoho_workplace_price">NPR 0</div>
+                        </div>
+                    </div>
+
+                    <!-- CRM & Business Tools -->
+                    <div class="service-section">
+                        <span class="section-label">📊 CRM & Business Tools</span>
+                        <div class="service-row">
+                            <div class="service-label">Zoho CRM Standard</div>
+                            <select class="service-select" id="zoho_crm" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="3">3 Users</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                            </select>
+                            <div class="service-price" id="zoho_crm_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Zoho Bigin CRM</div>
+                            <select class="service-select" id="zoho_bigin" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 User</option>
+                                <option value="3">3 Users</option>
+                                <option value="5">5 Users</option>
+                                <option value="10">10 Users</option>
+                            </select>
+                            <div class="service-price" id="zoho_bigin_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Zoom Pro</div>
+                            <select class="service-select" id="zoom_pro" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 License</option>
+                                <option value="5">5 Licenses</option>
+                                <option value="10">10 Licenses</option>
+                                <option value="25">25 Licenses</option>
+                            </select>
+                            <div class="service-price" id="zoom_pro_price">NPR 0</div>
+                        </div>
+                    </div>
+
+                    <!-- Adobe Creative Cloud -->
+                    <div class="service-section">
+                        <span class="section-label">🎨 Adobe Creative Cloud</span>
+                        <div class="service-row">
+                            <div class="service-label">Single App Subscription</div>
+                            <select class="service-select" id="adobe_single" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 License</option>
+                                <option value="5">5 Licenses</option>
+                                <option value="10">10 Licenses</option>
+                                <option value="25">25 Licenses</option>
+                            </select>
+                            <div class="service-price" id="adobe_single_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">Creative Cloud All Apps</div>
+                            <select class="service-select" id="adobe_all" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 License</option>
+                                <option value="5">5 Licenses</option>
+                                <option value="10">10 Licenses</option>
+                                <option value="25">25 Licenses</option>
+                            </select>
+                            <div class="service-price" id="adobe_all_price">NPR 0</div>
+                        </div>
+                    </div>
+
+                    <!-- Domains -->
+                    <div class="service-section">
+                        <span class="section-label">🔗 Domain Registration</span>
+                        <div class="service-row">
+                            <div class="service-label">.COM Domain (1 year)</div>
+                            <select class="service-select" id="domain_com" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Domain</option>
+                                <option value="3">3 Domains</option>
+                                <option value="5">5 Domains</option>
+                                <option value="10">10 Domains</option>
+                            </select>
+                            <div class="service-price" id="domain_com_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">.NET Domain (1 year)</div>
+                            <select class="service-select" id="domain_net" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Domain</option>
+                                <option value="3">3 Domains</option>
+                                <option value="5">5 Domains</option>
+                                <option value="10">10 Domains</option>
+                            </select>
+                            <div class="service-price" id="domain_net_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">.ORG Domain (1 year)</div>
+                            <select class="service-select" id="domain_org" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Domain</option>
+                                <option value="3">3 Domains</option>
+                                <option value="5">5 Domains</option>
+                                <option value="10">10 Domains</option>
+                            </select>
+                            <div class="service-price" id="domain_org_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">.COM.NP Domain (1 year)</div>
+                            <select class="service-select" id="domain_np" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Domain</option>
+                                <option value="3">3 Domains</option>
+                                <option value="5">5 Domains</option>
+                                <option value="10">10 Domains</option>
+                            </select>
+                            <div class="service-price" id="domain_np_price">NPR 0</div>
+                        </div>
+                    </div>
+
+                    <!-- Other Services -->
+                    <div class="service-section">
+                        <span class="section-label">🔧 Other Services</span>
+                        <div class="service-row">
+                            <div class="service-label">NordVPN Premium</div>
+                            <select class="service-select" id="nordvpn" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 License</option>
+                                <option value="5">5 Licenses</option>
+                                <option value="10">10 Licenses</option>
+                            </select>
+                            <div class="service-price" id="nordvpn_price">NPR 0</div>
+                        </div>
+                        <div class="service-row">
+                            <div class="service-label">AWS Consulting</div>
+                            <select class="service-select" id="aws_consulting" onchange="updateCalculation()">
+                                <option value="0">Not Selected</option>
+                                <option value="1">1 Hour</option>
+                                <option value="5">5 Hours</option>
+                                <option value="10">10 Hours</option>
+                            </select>
+                            <div class="service-price" id="aws_consulting_price">NPR 0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Panel -->
+                <div class="card summary-card">
+                    <div class="card-title">
+                        <span class="card-icon">💰</span>
+                        Price Summary
+                    </div>
+
+                    <div id="emptyState">
+                        <div class="empty-state-icon">📋</div>
+                        <p>Select services to see pricing</p>
+                    </div>
+
+                    <div id="summaryContent" style="display: none;">
+                        <div id="selectedItems"></div>
+
+                        <div class="summary-section">
+                            <span class="summary-section-title">Subtotal</span>
+                            <div class="summary-item">
+                                <span class="summary-label">Base Amount</span>
+                                <span class="summary-value">NPR <span id="subtotal">0</span></span>
+                            </div>
+                        </div>
+
+                        <div class="vat-section">
+                            <div class="vat-row">
+                                <span>VAT (13%)</span>
+                                <span>NPR <span id="vat">0</span></span>
+                            </div>
+                        </div>
+
+                        <div class="total-box">
+                            <div class="total-label">Total Payable</div>
+                            <div class="total-amount">NPR <span id="total">0</span></div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="copyToClipboard()">📋 Copy Quote</button>
+                            <button class="btn btn-secondary" onclick="clearCalculation()">🔄 Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Nest Nepal - Professional Rate Calculator | Local Partner for Google, Microsoft, Adobe, Zoho & Zoom</p>
+        </div>
+    </div>
+
+    <div class="success-message" id="successMessage">✓ Copied to clipboard!</div>
+
+    <script>
+        // Constants
+        const VAT_RATE = 0.13;
+        const BASE_URL = window.location.href.split('?')[0];
+
+        // All Nest Nepal Services with Monthly Pricing in NPR (converted from USD at ~130 NPR = 1 USD)
         const services = {
-            web_essential: { monthly: 90, yearly: 1080, unit: '/year' },
-            web_plus: { monthly: 150, yearly: 1800, unit: '/year' },
-            web_pro: { monthly: 270, yearly: 3240, unit: '/year' },
-            web_ultimate: { monthly: 360, yearly: 4320, unit: '/year' },
-            domain_com: { monthly: 208, yearly: 2500, unit: '/domain' },
-            domain_net: { monthly: 250, yearly: 3000, unit: '/domain' },
-            domain_org: { monthly: 250, yearly: 3000, unit: '/domain' },
-            google_workspace_starter: { monthly: 599, yearly: 7188, unit: '/user' },
-            google_workspace_standard: { monthly: 2170, yearly: 26040, unit: '/user' },
-            google_workspace_plus: { monthly: 3410, yearly: 40920, unit: '/user' },
-            microsoft_365_premium: { monthly: 3599, yearly: 43188, unit: '/user' },
-            microsoft_365_basic: { monthly: 549, yearly: 6588, unit: '/user' },
-            zoho_mail_premium_50gb: { monthly: 620, yearly: 7440, unit: '/user' },
-            nepal_vps_3c_6g: { monthly: 3780, yearly: 45360, unit: '/server' },
-            international_vps_8c_16g: { monthly: 8000, yearly: 96000, unit: '/server' }
+            // Web Hosting Plans
+            web_essential: { monthly: 1170, yearly: 14040, unit: '/plan' },
+            web_plus: { monthly: 1950, yearly: 23400, unit: '/plan' },
+            web_pro: { monthly: 3510, yearly: 42120, unit: '/plan' },
+            web_ultimate: { monthly: 4680, yearly: 56160, unit: '/plan' },
+
+            // Cloud Hosting
+            cloud_basic: { monthly: 5850, yearly: 70200, unit: '/month' },
+            cloud_pro: { monthly: 9750, yearly: 117000, unit: '/month' },
+
+            // VPS Hosting
+            vps_2gb_nepal: { monthly: 2340, yearly: 28080, unit: '/month' },
+            vps_4gb_nepal: { monthly: 3900, yearly: 46800, unit: '/month' },
+            vps_8gb_intl: { monthly: 7800, yearly: 93600, unit: '/month' },
+
+            // Google Workspace
+            google_starter: { monthly: 420, yearly: 5040, unit: '/user' },
+            google_standard: { monthly: 780, yearly: 9360, unit: '/user' },
+            google_plus: { monthly: 1170, yearly: 14040, unit: '/user' },
+
+            // Microsoft 365
+            ms365_basic: { monthly: 650, yearly: 7800, unit: '/user' },
+            ms365_premium: { monthly: 1170, yearly: 14040, unit: '/user' },
+
+            // Zoho Services
+            zoho_mail: { monthly: 390, yearly: 4680, unit: '/user' },
+            zoho_workplace: { monthly: 1170, yearly: 14040, unit: '/user' },
+            zoho_crm: { monthly: 780, yearly: 9360, unit: '/user' },
+            zoho_bigin: { monthly: 650, yearly: 7800, unit: '/user' },
+
+            // Other Services
+            zoom_pro: { monthly: 195, yearly: 2340, unit: '/user' },
+            adobe_single: { monthly: 975, yearly: 11700, unit: '/user' },
+            adobe_all: { monthly: 1950, yearly: 23400, unit: '/user' },
+
+            // Domains
+            domain_com: { monthly: 260, yearly: 3120, unit: '/year' },
+            domain_net: { monthly: 280, yearly: 3360, unit: '/year' },
+            domain_org: { monthly: 300, yearly: 3600, unit: '/year' },
+            domain_np: { monthly: 195, yearly: 2340, unit: '/year' },
+
+            // Other
+            nordvpn: { monthly: 195, yearly: 2340, unit: '/month' },
+            aws_consulting: { monthly: 1300, yearly: 15600, unit: '/hour' }
         };
 
+        let currentBillingPeriod = 'monthly';
+        let currentUser = null;
+
+        // Authentication Functions
+        function loginUser() {
+            const name = document.getElementById('nameInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim();
+
+            if (!name || !email) {
+                alert('Please enter name and email');
+                return;
+            }
+
+            currentUser = { name, email };
+            localStorage.setItem('nestUser', JSON.stringify(currentUser));
+            showApp();
+        }
+
+        function demoLogin() {
+            currentUser = { name: 'Demo User', email: 'demo@example.com' };
+            showApp();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('nestUser');
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('nameInput').value = '';
+            document.getElementById('emailInput').value = '';
+        }
+
+        function showApp() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+        }
+
+        // Logo Handling
+        function triggerLogoUpload() {
+            document.getElementById('logoInput').click();
+        }
+
+        function handleLogoUpload() {
+            const file = document.getElementById('logoInput').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.getElementById('companyLogo');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('logoPlaceholder').style.display = 'none';
+                    localStorage.setItem('nestLogo', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Billing Period
         function setBillingPeriod(period) {
             currentBillingPeriod = period;
-            
-            // Update button states
             document.querySelectorAll('.billing-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
-
             updateCalculation();
         }
 
+        // Calculations
         function updateCalculation() {
             let subtotal = 0;
             let hasSelection = false;
             const selectedItems = [];
 
-            // Update price displays and calculate
             for (const [serviceId, serviceData] of Object.entries(services)) {
                 const select = document.getElementById(serviceId);
                 const priceDisplay = document.getElementById(serviceId + '_price');
 
-                // If there's no direct select element for this service (grouped packages), skip here
-                if (!select) {
-                    if (priceDisplay) {
-                        const price = serviceData[currentBillingPeriod];
-                        priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
-                    }
-                    continue;
-                }
+                if (!select) continue;
 
                 const qty = parseInt(select.value) || 0;
                 const price = serviceData[currentBillingPeriod];
@@ -893,32 +1366,7 @@
 
                 if (priceDisplay) priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
             }
-            // Handle grouped Email product selection (email_product)
-            const emailProduct = document.getElementById('email_product');
-            if (emailProduct) {
-                const prod = emailProduct.value;
-                if (prod && prod !== '0') {
-                    const pkgKey = document.getElementById('email_package').value;
-                    const users = parseInt(document.getElementById('email_users').value) || 0;
-                    if (pkgKey && pkgKey !== '0' && users > 0 && services[pkgKey]) {
-                        hasSelection = true;
-                        const pricePerUser = services[pkgKey][currentBillingPeriod];
-                        const itemTotal = pricePerUser * users;
-                        subtotal += itemTotal;
-                        // add grouped item at beginning
-                        selectedItems.unshift({
-                            label: `${prod === 'google_workspace' ? 'Google Workspace' : prod === 'microsoft_365' ? 'Microsoft 365' : 'Zoho Mail'} - ${document.getElementById('email_package').selectedOptions[0].text}`,
-                            qty: users,
-                            qtyLabel: `${users} Users`,
-                            price: pricePerUser,
-                            unit: '/user',
-                            total: itemTotal
-                        });
-                    }
-                }
-            }
 
-            // Update display
             const selectedItemsDiv = document.getElementById('selectedItems');
             const summaryContent = document.getElementById('summaryContent');
             const emptyState = document.getElementById('emptyState');
@@ -938,7 +1386,6 @@
                 summaryContent.style.display = 'block';
                 emptyState.style.display = 'none';
 
-                // Calculate VAT and Total
                 const vat = Math.round(subtotal * VAT_RATE * 100) / 100;
                 const total = Math.round((subtotal + vat) * 100) / 100;
 
@@ -951,22 +1398,6 @@
             }
         }
 
-        // Handle grouped product (Google Workspace): package + users
-        function updateCalculationFromGroup(groupId) {
-            if (groupId === 'google_workspace') {
-                // Older grouped handling not used; now email grouping handled by generic handlers
-                updateCalculation();
-            }
-        }
-
-        function selectRow(el) {
-            // toggle selection class — clear others
-            document.querySelectorAll('.service-row').forEach(r => r.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        // Logo upload removed — logo is fixed SVG by default
-
         function copyToClipboard() {
             const summaryItems = document.querySelectorAll('#selectedItems .summary-item');
             const subtotal = document.getElementById('subtotal').textContent;
@@ -974,10 +1405,9 @@
             const total = document.getElementById('total').textContent;
             const period = currentBillingPeriod === 'monthly' ? 'Monthly' : 'Yearly';
 
-            // Build detailed quotation
             let itemsText = '';
             let itemCount = 0;
-            
+
             summaryItems.forEach(item => {
                 const label = item.querySelector('.summary-label').textContent;
                 const details = item.querySelector('div:nth-child(1) > div:nth-child(2)').textContent;
@@ -989,9 +1419,10 @@
 PROFESSIONAL QUOTATION (${period})
 ════════════════════════════════════════════════════════════════
 
+CLIENT: ${currentUser.name}
+
 SERVICES:
 ${itemsText}
-
 ════════════════════════════════════════════════════════════════
 Subtotal (Base Amount): NPR ${subtotal}
 VAT (13% - Nepal Compliance): NPR ${vat}
@@ -1016,64 +1447,56 @@ From: NEST NEPAL - Professional Rate Calculator
             document.querySelectorAll('select').forEach(select => {
                 select.value = '0';
             });
-            document.getElementById('summaryContent').style.display = 'none';
-            document.getElementById('emptyState').style.display = 'block';
-        }
-
-        function onEmailProductChange() {
-            const prod = document.getElementById('email_product').value;
-            const packageRow = document.getElementById('email_package_row');
-            const usersRow = document.getElementById('email_users_row');
-            const packageSelect = document.getElementById('email_package');
-
-            // Reset package options
-            packageSelect.innerHTML = '<option value="0">Select package</option>';
-
-            if (prod === '0') {
-                packageRow.style.display = 'none';
-                usersRow.style.display = 'none';
-                updateCalculation();
-                return;
-            }
-
-            // Populate package list based on product
-            const productPackages = {
-                google_workspace: [
-                    { key: 'google_workspace_starter', label: 'Starter (30GB)' },
-                    { key: 'google_workspace_standard', label: 'Standard (2TB)' },
-                    { key: 'google_workspace_plus', label: 'Plus (5TB)' }
-                ],
-                microsoft_365: [
-                    { key: 'microsoft_365_basic', label: 'Business Basic' },
-                    { key: 'microsoft_365_premium', label: 'Business Premium' }
-                ],
-                zoho_mail: [
-                    { key: 'zoho_mail_premium_50gb', label: 'Premium (50GB)' }
-                ]
-            };
-
-            const packages = productPackages[prod] || [];
-            packages.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.key;
-                opt.text = p.label;
-                packageSelect.appendChild(opt);
-            });
-
-            packageRow.style.display = 'grid';
-            usersRow.style.display = 'grid';
             updateCalculation();
         }
 
-        // Provide a default SVG logo so header looks updated if user hasn't uploaded their own
-        document.addEventListener('DOMContentLoaded', function() {
-            const img = document.getElementById('brandLogo');
-            if (img && !img.src) {
-                const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='360' height='72'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%232563eb'/><stop offset='1' stop-color='%237c3aed'/></linearGradient></defs><rect width='100%' height='100%' fill='white' rx='8'/><text x='20' y='45' font-family='Inter, Arial' font-weight='800' font-size='34' fill='url(%23g)'>NEST NEPAL</text></svg>`;
-                img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
-                img.style.display = 'inline-block';
-                const logoText = document.getElementById('logoText');
-                if (logoText) logoText.style.display = 'none';
+        // Team Sharing
+        function openShare() {
+            const shareLink = BASE_URL + '?shared=' + btoa(JSON.stringify({
+                logo: localStorage.getItem('nestLogo'),
+                services: document.querySelectorAll('select').forEach(sel => ({id: sel.id, value: sel.value})),
+                billing: currentBillingPeriod,
+                user: currentUser.name
+            }));
+
+            document.getElementById('shareLink').value = shareLink;
+            document.getElementById('shareModal').classList.remove('hidden');
+        }
+
+        function closeShare() {
+            document.getElementById('shareModal').classList.add('hidden');
+        }
+
+        function copyShareLink() {
+            const link = document.getElementById('shareLink');
+            link.select();
+            document.execCommand('copy');
+
+            const msg = document.getElementById('successMessage');
+            msg.style.display = 'block';
+            msg.textContent = '✓ Share link copied!';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('nestUser');
+            const savedLogo = localStorage.getItem('nestLogo');
+
+            if (savedLogo) {
+                const img = document.getElementById('companyLogo');
+                img.src = savedLogo;
+                img.style.display = 'block';
+                document.getElementById('logoPlaceholder').style.display = 'none';
+            }
+
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showApp();
+            } else {
+                document.getElementById('nameInput').focus();
             }
         });
     </script>
