@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nest Nepal - Professional Rate Calculator</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%B0%3C/text%3E%3C/svg%3E">
     <style>
         * {
             margin: 0;
@@ -700,6 +701,106 @@
             background: rgba(96, 165, 250, 0.6);
         }
 
+        /* Service Search */
+        .service-search-wrap {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .service-search {
+            width: 100%;
+            padding: 13px 16px 13px 44px;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 10px;
+            color: #f1f5f9;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .service-search:focus {
+            outline: none;
+            border-color: #60a5fa;
+            background: rgba(30, 41, 59, 0.9);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+        }
+
+        .service-search::placeholder {
+            color: #64748b;
+        }
+
+        .service-search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1em;
+            pointer-events: none;
+        }
+
+        .service-section.is-hidden,
+        .service-row.is-hidden {
+            display: none;
+        }
+
+        .no-results {
+            display: none;
+            text-align: center;
+            color: #94a3b8;
+            font-weight: 600;
+            padding: 30px 10px;
+        }
+
+        /* Selected service row highlight */
+        .service-row.selected {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.16) 0%, rgba(167, 139, 250, 0.16) 100%);
+            border-color: rgba(96, 165, 250, 0.55);
+            box-shadow: 0 0 18px rgba(96, 165, 250, 0.15);
+        }
+
+        .service-row.selected .service-price {
+            color: #a78bfa;
+        }
+
+        /* Selected count badge */
+        .summary-count-badge {
+            margin-left: auto;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.2) 0%, rgba(167, 139, 250, 0.2) 100%);
+            color: #93c5fd;
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.62em;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+
+        .summary-count-badge.is-hidden {
+            display: none;
+        }
+
+        /* Remove item button in summary */
+        .summary-remove {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            line-height: 1;
+            margin-left: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .summary-remove:hover {
+            background: rgba(239, 68, 68, 0.28);
+            transform: scale(1.08);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .main-content {
@@ -766,12 +867,12 @@
             <p>Professional Rate Calculator</p>
             
             <div class="form-group">
-                <label>Name</label>
+                <label for="nameInput">Name</label>
                 <input type="text" id="nameInput" placeholder="Your Name" />
             </div>
             
             <div class="form-group">
-                <label>Email</label>
+                <label for="emailInput">Email</label>
                 <input type="email" id="emailInput" placeholder="your@email.com" />
             </div>
             
@@ -826,9 +927,16 @@
                     </div>
 
                     <div class="billing-toggle">
-                        <button class="billing-btn active" onclick="setBillingPeriod('monthly')">Monthly</button>
-                        <button class="billing-btn" onclick="setBillingPeriod('yearly')">Yearly</button>
+                        <button class="billing-btn active" onclick="setBillingPeriod('monthly', this)">Monthly</button>
+                        <button class="billing-btn" onclick="setBillingPeriod('yearly', this)">Yearly</button>
                     </div>
+
+                    <div class="service-search-wrap">
+                        <span class="service-search-icon">🔍</span>
+                        <input type="text" class="service-search" id="serviceSearch" placeholder="Search services (e.g. domain, Google, VPS)..." oninput="filterServices()" aria-label="Search services" />
+                    </div>
+
+                    <div class="no-results" id="noResults">No services match your search.</div>
 
                     <!-- Web Hosting -->
                     <div class="service-section">
@@ -1162,6 +1270,7 @@
                     <div class="card-title">
                         <span class="card-icon">💰</span>
                         Price Summary
+                        <span class="summary-count-badge is-hidden" id="summaryCount">0 services</span>
                     </div>
 
                     <div id="emptyState">
@@ -1212,6 +1321,11 @@
         // Constants
         const VAT_RATE = 0.13;
         const BASE_URL = window.location.href.split('?')[0];
+
+        // Format a number as a whole NPR amount with thousands separators
+        function formatNPR(amount) {
+            return 'NPR ' + Math.round(amount).toLocaleString('en-US');
+        }
 
         // All Nest Nepal Services with Monthly Pricing in NPR (converted from USD at ~130 NPR = 1 USD)
         const services = {
@@ -1321,12 +1435,16 @@
         }
 
         // Billing Period
-        function setBillingPeriod(period) {
+        function setBillingPeriod(period, btn) {
             currentBillingPeriod = period;
-            document.querySelectorAll('.billing-btn').forEach(btn => {
-                btn.classList.remove('active');
+            document.querySelectorAll('.billing-btn').forEach(b => {
+                b.classList.remove('active');
             });
-            event.target.classList.add('active');
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                document.querySelector(`.billing-btn[onclick*="${period}"]`).classList.add('active');
+            }
             updateCalculation();
         }
 
@@ -1345,6 +1463,7 @@
                 const qty = parseInt(select.value) || 0;
                 const price = serviceData[currentBillingPeriod];
                 const unit = serviceData.unit;
+                const row = select.closest('.service-row');
 
                 if (qty > 0) {
                     hasSelection = true;
@@ -1355,6 +1474,7 @@
                     const qtyLabel = select.options[select.selectedIndex].text;
 
                     selectedItems.push({
+                        id: serviceId,
                         label: label,
                         qty: qty,
                         qtyLabel: qtyLabel,
@@ -1362,14 +1482,19 @@
                         unit: unit,
                         total: itemTotal
                     });
+
+                    if (row) row.classList.add('selected');
+                } else if (row) {
+                    row.classList.remove('selected');
                 }
 
-                if (priceDisplay) priceDisplay.textContent = `NPR ${price.toLocaleString()}`;
+                if (priceDisplay) priceDisplay.textContent = formatNPR(price);
             }
 
             const selectedItemsDiv = document.getElementById('selectedItems');
             const summaryContent = document.getElementById('summaryContent');
             const emptyState = document.getElementById('emptyState');
+            const summaryCount = document.getElementById('summaryCount');
 
             if (hasSelection) {
                 let html = '';
@@ -1377,25 +1502,60 @@
                     html += `<div class="summary-item">
                         <div style="flex: 1;">
                             <div class="summary-label">${item.label}</div>
-                            <div style="font-size: 0.85em; color: #94a3b8; margin-top: 3px;">${item.qty}× NPR ${item.price.toLocaleString()}${item.unit}</div>
+                            <div style="font-size: 0.85em; color: #94a3b8; margin-top: 3px;">${item.qty}× ${formatNPR(item.price)}${item.unit}</div>
                         </div>
-                        <span class="summary-value">NPR ${item.total.toLocaleString()}</span>
+                        <span class="summary-value">${formatNPR(item.total)}</span>
+                        <button class="summary-remove" onclick="removeService('${item.id}')" aria-label="Remove ${item.label}" title="Remove from quote">✕</button>
                     </div>`;
                 });
                 selectedItemsDiv.innerHTML = html;
                 summaryContent.style.display = 'block';
                 emptyState.style.display = 'none';
 
-                const vat = Math.round(subtotal * VAT_RATE * 100) / 100;
-                const total = Math.round((subtotal + vat) * 100) / 100;
+                const count = selectedItems.length;
+                summaryCount.textContent = count + (count === 1 ? ' service' : ' services');
+                summaryCount.classList.remove('is-hidden');
 
-                document.getElementById('subtotal').textContent = subtotal.toLocaleString();
-                document.getElementById('vat').textContent = vat.toLocaleString();
-                document.getElementById('total').textContent = total.toLocaleString();
+                const vat = Math.round(subtotal * VAT_RATE);
+                const total = subtotal + vat;
+
+                document.getElementById('subtotal').textContent = Math.round(subtotal).toLocaleString('en-US');
+                document.getElementById('vat').textContent = vat.toLocaleString('en-US');
+                document.getElementById('total').textContent = total.toLocaleString('en-US');
             } else {
                 summaryContent.style.display = 'none';
                 emptyState.style.display = 'block';
+                summaryCount.classList.add('is-hidden');
             }
+        }
+
+        // Remove a single service from the quote
+        function removeService(serviceId) {
+            const select = document.getElementById(serviceId);
+            if (select) {
+                select.value = '0';
+                updateCalculation();
+            }
+        }
+
+        // Filter the service list by search text
+        function filterServices() {
+            const query = document.getElementById('serviceSearch').value.trim().toLowerCase();
+            let anyVisible = false;
+
+            document.querySelectorAll('.service-section').forEach(section => {
+                let sectionHasMatch = false;
+                section.querySelectorAll('.service-row').forEach(row => {
+                    const label = row.querySelector('.service-label').textContent.toLowerCase();
+                    const match = !query || label.includes(query);
+                    row.classList.toggle('is-hidden', !match);
+                    if (match) sectionHasMatch = true;
+                });
+                section.classList.toggle('is-hidden', !sectionHasMatch);
+                if (sectionHasMatch) anyVisible = true;
+            });
+
+            document.getElementById('noResults').style.display = anyVisible ? 'none' : 'block';
         }
 
         function copyToClipboard() {
@@ -1444,23 +1604,65 @@ From: NEST NEPAL - Professional Rate Calculator
         }
 
         function clearCalculation() {
+            const hasItems = document.querySelector('.service-row.selected');
+            if (hasItems && !confirm('Clear all selected services from this quote?')) {
+                return;
+            }
             document.querySelectorAll('select').forEach(select => {
                 select.value = '0';
             });
             updateCalculation();
         }
 
+        // Unicode-safe base64 helpers
+        function encodePayload(obj) {
+            return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+        }
+
+        function decodePayload(str) {
+            return JSON.parse(decodeURIComponent(escape(atob(str))));
+        }
+
         // Team Sharing
         function openShare() {
-            const shareLink = BASE_URL + '?shared=' + btoa(JSON.stringify({
-                logo: localStorage.getItem('nestLogo'),
-                services: document.querySelectorAll('select').forEach(sel => ({id: sel.id, value: sel.value})),
+            const selected = {};
+            document.querySelectorAll('.service-select').forEach(sel => {
+                if (sel.value && sel.value !== '0') {
+                    selected[sel.id] = sel.value;
+                }
+            });
+
+            const shareLink = BASE_URL + '?shared=' + encodePayload({
+                services: selected,
                 billing: currentBillingPeriod,
-                user: currentUser.name
-            }));
+                user: currentUser ? currentUser.name : ''
+            });
 
             document.getElementById('shareLink').value = shareLink;
             document.getElementById('shareModal').classList.remove('hidden');
+        }
+
+        // Restore a shared quote from the ?shared= URL parameter
+        function restoreSharedQuote() {
+            const params = new URLSearchParams(window.location.search);
+            const shared = params.get('shared');
+            if (!shared) return;
+
+            try {
+                const data = decodePayload(shared);
+                if (data.billing) {
+                    setBillingPeriod(data.billing);
+                }
+                if (data.services) {
+                    Object.entries(data.services).forEach(([id, value]) => {
+                        const select = document.getElementById(id);
+                        if (select) select.value = value;
+                    });
+                }
+                updateCalculation();
+            } catch (e) {
+                console.warn('Could not restore shared quote:', e);
+            }
         }
 
         function closeShare() {
@@ -1522,6 +1724,15 @@ From: NEST NEPAL - Professional Rate Calculator
             return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
         }
 
+        // Give every service select an accessible name based on its row label
+        function labelServiceSelects() {
+            document.querySelectorAll('.service-select').forEach(select => {
+                const row = select.closest('.service-row');
+                const label = row && row.querySelector('.service-label');
+                if (label) select.setAttribute('aria-label', label.textContent.trim());
+            });
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('nestUser');
@@ -1533,12 +1744,24 @@ From: NEST NEPAL - Professional Rate Calculator
             img.style.display = 'block';
             document.getElementById('logoPlaceholder').style.display = 'none';
 
+            labelServiceSelects();
+
+            const hasSharedQuote = new URLSearchParams(window.location.search).has('shared');
+
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
+                showApp();
+            } else if (hasSharedQuote) {
+                // Let recipients view a shared quote without logging in
+                currentUser = { name: 'Shared Quote', email: '' };
                 showApp();
             } else {
                 document.getElementById('nameInput').focus();
             }
+
+            // Render initial per-service prices, then apply any shared selections
+            updateCalculation();
+            restoreSharedQuote();
         });
     </script>
 </body>
